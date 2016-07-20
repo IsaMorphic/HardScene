@@ -12,7 +12,7 @@ public class Config {
 	public int port = 28894;
 	public int maxClients = 50;
 	public String ip = "127.0.0.1";
-	public int authPortal = 100;
+	public String hash = "8/0/2/7";
 	
 	public Config() throws IOException{
 		    File file = new File("server.properties");
@@ -24,7 +24,7 @@ public class Config {
 		    		ip = p.getProperty("ip");
 		    		port = Integer.parseInt(p.getProperty("port"));
 		    		maxClients = Integer.parseInt(p.getProperty("maxClients"));
-		    		authPortal = Integer.parseInt(p.getProperty("authPortal"));
+		    		hash = p.getProperty("hash");
 		    	}
 		    }else{
 		        PrintWriter writer = null;
@@ -32,14 +32,14 @@ public class Config {
 		            writer = new PrintWriter("server.properties", "UTF-8");
 		        } catch (Exception ex) {
 		        	ex.printStackTrace();
-		        	System.out.println("[ERROR] An internal error has occured whilist creating 'server.properties'.");
+		        	System.out.println("Failed. An internal error has occured whilist creating server config.");
 					System.exit(-1);
 		        }
 		        writer.println("protocolVersion=1");
 		        writer.println("ip=127.0.0.1");
 		        writer.println("port=28894");
 		        writer.println("maxClients=50");
-		        writer.println("authPortal=100");
+		        writer.println("hash=8/0/2/7");
 		        writer.close();
 	    	}
 	}

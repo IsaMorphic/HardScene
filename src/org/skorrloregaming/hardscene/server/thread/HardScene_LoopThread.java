@@ -6,14 +6,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
 import org.skorrloregaming.hardscene.server.HardScene;
-import org.skorrloregaming.hardscene.server.auth.AuthHelper;
-import org.skorrloregaming.hardscene.server.auth.AuthKey;
 import org.skorrloregaming.hardscene.server.event.ClientConnectEvent;
 import org.skorrloregaming.hardscene.server.event.ClientDisconnectEvent;
 import org.skorrloregaming.hardscene.server.event.impl.ClientImpl;
 
 public class HardScene_LoopThread implements Runnable{
-
+	
 	@Override
 	public void run() {
 		Socket socket = null;
@@ -24,10 +22,14 @@ public class HardScene_LoopThread implements Runnable{
 				e.printStackTrace();
 				break;
 			}
-			AuthHelper helper = new AuthHelper();
-			AuthKey serverHash = helper.hash(HardScene.config.authPortal);
+			// SEND THE HASH CODE : SECURITY FEATURE
 			try {
-				socket.getOutputStream().write(serverHash.hash, 0, serverHash.hash.length);
+				String[] hashBytesOrig = HardScene.config.hash.split("/");
+				byte[] hashBytes = new byte[4];
+				for (int i = 0; i < hashBytesOrig.length; i++){
+					hashBytes[i] = Byte.parseByte(hashBytesOrig[i]);
+				}
+				socket.getOutputStream().write(hashBytes, 0, hashBytes.length);
 				socket.getOutputStream().flush();
 			} catch (IOException e2) {
 				e2.printStackTrace();
@@ -45,18 +47,17 @@ public class HardScene_LoopThread implements Runnable{
 					System.out.println(socket.getRemoteSocketAddress().toString() + ": Socket was closed before it could be read.");
 				}else{
 					socket.getInputStream().read(messageBytes, 0, messageBytes.length);
-					byte[] token = new byte[] { messageBytes[0], messageBytes[1], messageBytes[2], messageBytes[3] };
-					int tokenUp = token[0] + token[1] + token[2] + token[3];
-					int masterKeyUp = serverHash.hash[0] + serverHash.hash[1] + serverHash.hash[2] + serverHash.hash[3];
 					String name = new String(messageBytes, StandardCharsets.UTF_8);
-					ClientImpl client = new ClientImpl(socket, random.nextInt(10000), name.split("$")[1]);
+					ClientImpl client = new ClientImpl(socket, random.nextInt(10000), name.split("\\$")[1]);
+					// GET THE CLIENT TOKEN : SECURITY FEATURE
+					String returnToken = messageBytes[0] + "/"+ messageBytes[1] + "/"+ messageBytes[2] + "/"+ messageBytes[3];
 					if (HardScene.clients.size() > HardScene.config.maxClients){
 						System.out.println(client.address +" has been denied access to connect due to the max clients threshold.");
 						try {
 							new ClientDisconnectEvent(client, true);
 						} catch (Exception ignored) {}
-					}else if (tokenUp != masterKeyUp){
-						System.out.println(client.address +" has been denied access to connect due to an invalid token.");
+					}else if (returnToken != HardScene.config.hash){
+						System.out.println(client.address +" has been denied access to connect due to an invalid token : "+returnToken);
 						try {
 							new ClientDisconnectEvent(client, true);
 						} catch (Exception ignored) {}
@@ -81,5 +82,4 @@ public class HardScene_LoopThread implements Runnable{
 			}
 		}
 	}
-
 }
