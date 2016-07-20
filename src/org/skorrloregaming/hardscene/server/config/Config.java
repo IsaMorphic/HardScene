@@ -29,7 +29,7 @@ public class Config {
 		    }else{
 		        PrintWriter writer = null;
 		        try {
-		            writer = new PrintWriter("server.properties", "UTF-8");
+		            writer = new PrintWriter("hardscene.properties", "UTF-8");
 		        } catch (Exception ex) {
 		        	ex.printStackTrace();
 		        	System.out.println("Failed. An internal error has occured whilist creating server config.");
