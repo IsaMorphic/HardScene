@@ -5,6 +5,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -98,7 +101,10 @@ public class HardScene {
 	public static void log(String message){
 		if (config.log){
 			try{
-				String logMessage = '\n' + trim(message);
+				Date date = new Date();
+				DateFormat format = new SimpleDateFormat("HHmm");
+				String time = "["+(format.format(date))+"]";
+				String logMessage = '\n' + time + " " + trim(message);
 				File file = new File("hardscene_log.txt");
 	            if (!file.exists()) file.createNewFile();
 	            FileWriter writer = new FileWriter(file, true);

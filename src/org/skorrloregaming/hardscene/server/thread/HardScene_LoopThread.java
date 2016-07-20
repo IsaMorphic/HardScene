@@ -58,8 +58,12 @@ public class HardScene_LoopThread implements Runnable{
 			byte[] messageBytes = null;
 			try {
 				messageBytes = new byte[24];
-				if (socket.getInputStream().read() == -1){
-					System.out.println(socket.getRemoteSocketAddress().toString() + ": Socket was closed before it could be read.");
+				int returnConnectivity = -1;
+				try{
+					returnConnectivity = socket.getInputStream().read();
+				}catch (Exception ignored){}
+				if (returnConnectivity == -1){
+					System.out.println(socket.getRemoteSocketAddress().toString() + " closed its socket before it could be processed.");
 				}else{
 					socket.getInputStream().read(messageBytes, 0, messageBytes.length);
 					String name = new String(messageBytes, StandardCharsets.UTF_8);
@@ -104,9 +108,8 @@ public class HardScene_LoopThread implements Runnable{
 						}	
 					}
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				break;
+			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 		}
 	}
