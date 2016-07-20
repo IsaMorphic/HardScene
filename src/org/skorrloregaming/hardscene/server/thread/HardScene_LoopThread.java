@@ -56,7 +56,7 @@ public class HardScene_LoopThread implements Runnable{
 						try {
 							new ClientDisconnectEvent(client, true);
 						} catch (Exception ignored) {}
-					}else if (returnToken != HardScene.config.hash){
+					}else if (!returnToken.equals(HardScene.config.hash)){
 						System.out.println(client.address +" has been denied access to connect due to an invalid token : "+returnToken);
 						try {
 							new ClientDisconnectEvent(client, true);
