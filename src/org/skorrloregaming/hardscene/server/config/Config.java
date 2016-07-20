@@ -15,7 +15,7 @@ public class Config {
 	public String hash = "8/0/2/7";
 	
 	public Config() throws IOException{
-		    File file = new File("server.properties");
+		    File file = new File("hardscene.properties");
 		    Properties p = new Properties();
 		    if (file.exists()){
 		    	try (FileReader reader = new FileReader(file)){
