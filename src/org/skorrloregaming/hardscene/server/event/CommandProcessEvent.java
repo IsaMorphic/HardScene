@@ -2,8 +2,8 @@ package org.skorrloregaming.hardscene.server.event;
 
 import java.util.HashMap;
 import org.skorrloregaming.hardscene.server.HardScene;
-import org.skorrloregaming.hardscene.server.event.impl.ClientImpl;
-import org.skorrloregaming.hardscene.server.event.impl.LoggerImpl;
+import org.skorrloregaming.hardscene.server.impl.ClientImpl;
+import org.skorrloregaming.hardscene.server.impl.LoggerImpl;
 
 public class CommandProcessEvent {
 
@@ -14,12 +14,12 @@ public class CommandProcessEvent {
 				viewHelp(logger);
 			}else if (args[0].equalsIgnoreCase("ban")){
 				if (args.length >= 2){
-					String address = args[1];
-					boolean result = HardScene.suppressionHelper.suppress(address);
+					String address = "/"+args[1];
+					boolean result = HardScene.bannedManager.addProperty(address);
 					HashMap<Integer, ClientImpl> array = ((HashMap<Integer, ClientImpl>) HardScene.clients.clone());
 					for (ClientImpl c : array.values()){
 						String clientAddress = c.address.split(":")[0];
-						if (clientAddress.equals("/"+address)){
+						if (clientAddress.equals(address)){
 							new ClientDisconnectEvent(c, true);
 							HardScene.clients.remove(c);
 						}
@@ -34,8 +34,8 @@ public class CommandProcessEvent {
 				}
 			}else if (args[0].equalsIgnoreCase("pardon")){
 				if (args.length >= 2){
-					String address = args[1];
-					boolean result = HardScene.suppressionHelper.pardon(address);
+					String address = "/"+args[1];
+					boolean result = HardScene.bannedManager.removeProperty(address);
 					if (result){
 						logger.sendMessage("Success.");
 					}else{

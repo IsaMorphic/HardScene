@@ -1,4 +1,4 @@
-package org.skorrloregaming.hardscene.server.event.impl;
+package org.skorrloregaming.hardscene.server.impl;
 
 public class LoggerImpl {
 	

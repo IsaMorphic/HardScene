@@ -1,4 +1,4 @@
-package org.skorrloregaming.hardscene.server.event.impl;
+package org.skorrloregaming.hardscene.server.impl;
 
 import java.net.Socket;
 
@@ -11,7 +11,7 @@ public class ClientImpl {
 	
 	public ClientImpl(Socket socket, Integer id, String name){
 		this.socket = socket;
-		this.address = socket.getRemoteSocketAddress().toString();
+		this.address = socket.getRemoteSocketAddress().toString().split(":")[0];
 		this.id = id;
 		this.displayName = name;
 	}

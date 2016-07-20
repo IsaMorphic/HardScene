@@ -1,16 +1,18 @@
 package org.skorrloregaming.hardscene.server;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.HashMap;
 import java.util.Scanner;
 
 import org.skorrloregaming.hardscene.server.config.Config;
-import org.skorrloregaming.hardscene.server.config.SuppressionHelper;
+import org.skorrloregaming.hardscene.server.config.Properties;
 import org.skorrloregaming.hardscene.server.event.CommandProcessEvent;
-import org.skorrloregaming.hardscene.server.event.impl.ClientImpl;
-import org.skorrloregaming.hardscene.server.event.impl.LoggerImpl;
+import org.skorrloregaming.hardscene.server.impl.ClientImpl;
+import org.skorrloregaming.hardscene.server.impl.LoggerImpl;
 import org.skorrloregaming.hardscene.server.thread.HardScene_LoopThread;
 
 public class HardScene {
@@ -21,7 +23,8 @@ public class HardScene {
 	public static Config config = null;
 	public static boolean insecure = false;
 	
-	public static SuppressionHelper suppressionHelper = null;
+	public static Properties bannedManager = null;
+	public static Properties opManager = null;
 	
 	public static String frameName = "HardScene";
 	
@@ -35,7 +38,8 @@ public class HardScene {
 	}
 	
 	public void onEnable(){
-    	suppressionHelper = new SuppressionHelper(new File("banned-clients.o"));
+		opManager = new Properties(new File("hardscene_operators.properties"));
+    	bannedManager = new Properties(new File("hardscene_banned.properties"));
 		startServer();
 	}
 	
@@ -67,6 +71,7 @@ public class HardScene {
 		System.out.println("Server started, waiting for incoming connections..");
 	    Scanner scanner = new Scanner(System.in);
  		while (running){
+ 			System.out.print("> ");
  		    String input = scanner.nextLine();
  		    new CommandProcessEvent(input.split(" "), new LoggerImpl());
  		}
@@ -74,7 +79,38 @@ public class HardScene {
  	    return true;
 	}
 	
+	public static String trim(String str){
+		String output = "";
+		boolean foundStart = false;
+		for (int i = 0; i < str.length(); i++){
+			if (!(str.charAt(i) == (char)' ')){
+				if (!foundStart) foundStart = true;
+				output += str.charAt(i);
+			}else{
+				if (foundStart){
+					output += str.charAt(i);
+				}
+			}
+		}
+		return output;
+	}
+	
+	public static void log(String message){
+		if (config.log){
+			try{
+				String logMessage = '\n' + trim(message);
+				File file = new File("hardscene_log.txt");
+	            if (!file.exists()) file.createNewFile();
+	            FileWriter writer = new FileWriter(file, true);
+	            BufferedWriter bufferedWriter = new BufferedWriter(writer);
+	            bufferedWriter.write(logMessage, 0, logMessage.length());
+	            bufferedWriter.close();
+			}catch (Exception ex){ex.printStackTrace();}
+		}
+	}
+	
 	public static void broadcast(String message, boolean direct) throws IOException{
+		log(message);
 		byte[] messageBytes = message.getBytes();
 		for (ClientImpl c : clients.values()){
 			if (direct){

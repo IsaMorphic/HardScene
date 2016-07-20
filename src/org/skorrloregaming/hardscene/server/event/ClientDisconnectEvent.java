@@ -3,7 +3,7 @@ package org.skorrloregaming.hardscene.server.event;
 import java.io.IOException;
 
 import org.skorrloregaming.hardscene.server.HardScene;
-import org.skorrloregaming.hardscene.server.event.impl.ClientImpl;
+import org.skorrloregaming.hardscene.server.impl.ClientImpl;
 
 public class ClientDisconnectEvent {
 	
