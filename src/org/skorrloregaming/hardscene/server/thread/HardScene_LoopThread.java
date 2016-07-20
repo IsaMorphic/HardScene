@@ -48,7 +48,13 @@ public class HardScene_LoopThread implements Runnable{
 				}else{
 					socket.getInputStream().read(messageBytes, 0, messageBytes.length);
 					String name = new String(messageBytes, StandardCharsets.UTF_8);
-					ClientImpl client = new ClientImpl(socket, random.nextInt(10000), name.split("\\$")[1]);
+					ClientImpl client = null;
+					try{
+						client = new ClientImpl(socket, random.nextInt(10000), name.split("\\$")[1]);	
+					}catch (Exception ignored){
+						System.out.println("Debug : Incoming client fails to meet the new protocol requirements, reverting..");
+						client = new ClientImpl(socket, random.nextInt(10000), name);
+					}
 					// GET THE CLIENT TOKEN : SECURITY FEATURE
 					String returnToken = messageBytes[0] + "/"+ messageBytes[1] + "/"+ messageBytes[2] + "/"+ messageBytes[3];
 					if (HardScene.clients.size() > HardScene.config.maxClients){
