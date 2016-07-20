@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -55,17 +54,12 @@ public class HardScene {
 			e1.printStackTrace();
 			System.exit(-1);
 		}
-		System.out.println(frameName+", based on JServ (Open Source).");
 		System.out.println("Starting bind on port "+config.port+"..");
 		try {
 			server = new ServerSocket(config.port);
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("#################################################");
-			System.out.println("###################################################");
-			System.out.println("# Failed to bind HardScene to port "+config.port+".");
-			System.out.println("###################################################");
-			System.out.println("#################################################");
+			System.out.println("Failed to bind HardScene to port "+config.port+".");
 			running = false;
 			return false;
 		}
@@ -101,9 +95,7 @@ public class HardScene {
 	public static void log(String message){
 		if (config.log){
 			try{
-				Date date = new Date();
-				DateFormat format = new SimpleDateFormat("HHmm");
-				String time = "["+(format.format(date))+"]";
+				String time = "["+new SimpleDateFormat("HH:mm:ss").format(new Date())+"]";
 				String logMessage = '\n' + time + " " + trim(message);
 				File file = new File("hardscene_log.txt");
 	            if (!file.exists()) file.createNewFile();
