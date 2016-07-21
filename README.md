@@ -1,11 +1,15 @@
 # HardScene
 A server frame implementation to Softly IRC client.
 
-# Download
-1. Run the following command in the command terminal 'git clone git://github.com/Speentie8081/HardScene.git'
+# How to download
+Run the following command in the command terminal
+> git clone git://github.com/Speentie8081/HardScene.git
 
-# Usage
-1. Navigate to the cloned GitHub project.
-2. Run the following command in the command terminal 'java -jar HardScene.jar'.
+# Features
+1. Protection against bot attacks, using a hash in the config.
+2. Allows you to connect on a mobile device using Softly IRC.
+3. Banning system to decline certain IP addresses from connecting.
+4. More coes to its advantage, using a new thread for each client.
+...and more!
 
-Note: To run the server you must forward the port 28894 or whatever you specify in hardscene.properties.
+Note: You may need to forward the port specified in the config file.
