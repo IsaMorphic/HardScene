@@ -1,5 +1,5 @@
 # HardScene
-A server frame implementation to Softly IRC client.
+A server frame implementation of the Softly IRC client.
 
 # How to download
 Run the following command in the command terminal
@@ -9,7 +9,8 @@ Run the following command in the command terminal
 1. Protection against bot attacks, using a hash in the config.
 2. Allows you to connect on a mobile device using Softly IRC.
 3. Banning system to decline certain IP addresses from connecting.
-4. More coes to its advantage, using a new thread for each client.
-5. .. and more!
+4. More cores to its advantage, using a new thread for each client.
+
+.... and much more!
 
 Note: You may need to forward the port specified in the config file.
