@@ -38,7 +38,6 @@ public class HardScene_LoopThread implements Runnable{
 				if (returnConnectivity == -1){
 					System.out.println(socket.getRemoteSocketAddress().toString() + " closed its socket before it could be processed.");
 				}else{
-					socket.getInputStream().read(messageBytes, 0, messageBytes.length);
 					String name = new String(messageBytes, StandardCharsets.UTF_8);
 					ClientImpl client = new ClientImpl(socket, random.nextInt(10000), name.trim());
 					if (HardScene.clients.size() > HardScene.config.maxClients){
