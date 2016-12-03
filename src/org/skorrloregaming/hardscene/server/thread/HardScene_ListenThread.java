@@ -18,12 +18,15 @@ public class HardScene_ListenThread implements Runnable {
 	public void run() {
 		while (HardScene.running) {
 			try {
-				byte[] messageBytes = new byte[client.socket.getInputStream().available()];
-				if (client.socket.getInputStream().read(messageBytes, 0, messageBytes.length) == -1)
+				byte[] messageBytes = new byte[512];
+				int returnValue = client.socket.getInputStream().read(messageBytes, 0, messageBytes.length);
+				if (returnValue == -1)
 					break;
-				String message = new String(messageBytes, StandardCharsets.UTF_8);
-				System.out.println(client.address.toString() + " (" + client.id + "): " + message);
-				HardScene.broadcast(message);
+				String message = new String(messageBytes, StandardCharsets.UTF_8).trim();
+				if (returnValue == 0 || message != ""){
+					System.out.println(client.address.toString() + " (" + client.id + "): " + message);
+					HardScene.broadcast(message);	
+				}
 			} catch (Exception e) {
 				break;
 			}
