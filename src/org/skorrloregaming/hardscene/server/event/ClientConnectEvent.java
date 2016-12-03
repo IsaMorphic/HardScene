@@ -20,7 +20,7 @@ public class ClientConnectEvent {
 		System.out.println(client.address + " has joined the server.");
 		String message = client.displayName + " has joined the server.";
 		System.out.println(message);
-		HardScene.broadcast(message, false);
+		HardScene.broadcast(message);
 	}
 	
 }

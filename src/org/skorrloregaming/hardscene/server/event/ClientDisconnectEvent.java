@@ -22,7 +22,7 @@ public class ClientDisconnectEvent {
 			}
 			String message = client.displayName + " has quit the server.";
 			System.out.println(message);
-			HardScene.broadcast(message, false);
+			HardScene.broadcast(message);
 		}
 	}
 	

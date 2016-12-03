@@ -118,13 +118,13 @@ public class CommandProcessEvent {
 				}
 			} else if (args[0].equalsIgnoreCase("broadcast")) {
 				if (args.length >= 2) {
-					String message = "  [Broadcast]";
+					String message = logger.getName() + " says..";
 					for (int i = 1; i < args.length; i++) {
 						message += " " + args[i];
 					}
 					logger.sendMessage("Broadcasting message to all connected clients..");
 					try {
-						HardScene.broadcast(message, false);
+						HardScene.broadcast(message);
 					} catch (Exception ignored) {
 					}
 					logger.sendMessage("Success. Broadcasted message to online clients.");
@@ -136,7 +136,7 @@ public class CommandProcessEvent {
 						return;
 					}
 					ClientImpl c = HardScene.clients.get(Integer.parseInt(args[1]));
-					String message = "  " + logger.getName() + " says..";
+					String message = logger.getName() + " says..";
 					for (int i = 2; i < args.length; i++) {
 						message += " " + args[i];
 					}
@@ -146,7 +146,7 @@ public class CommandProcessEvent {
 						c.socket.getOutputStream().flush();
 					} catch (Exception ignored) {
 					}
-					logger.sendMessage("[me > " + Integer.parseInt(args[1]) + "] " + message);
+					logger.sendMessage("Success. Sent message privately to client " + c.id + ".");
 					return;
 				} else {
 					logger.sendMessage("Failed. Syntax: '" + preCommandSyntax + "tell <clientID> <message>'");

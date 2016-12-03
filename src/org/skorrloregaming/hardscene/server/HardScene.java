@@ -112,17 +112,11 @@ public class HardScene {
 		}
 	}
 
-	public static void broadcast(String message, boolean direct) throws IOException {
+	public static void broadcast(String message) throws IOException {
 		log(message);
 		byte[] messageBytes = message.getBytes();
 		for (ClientImpl c : clients.values()) {
-			if (direct) {
-				c.socket.getOutputStream().write(messageBytes, 0, messageBytes.length);
-			} else {
-				messageBytes[0] = (byte) ' ';
-				messageBytes[1] = (byte) ' ';
-				c.socket.getOutputStream().write(messageBytes, 0, messageBytes.length);
-			}
+			c.socket.getOutputStream().write(messageBytes, 0, messageBytes.length);
 			c.socket.getOutputStream().flush();
 		}
 	}
