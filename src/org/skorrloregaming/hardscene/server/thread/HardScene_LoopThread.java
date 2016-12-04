@@ -41,8 +41,13 @@ public class HardScene_LoopThread implements Runnable {
 							+ " closed its socket before it could be processed.");
 				} else {
 					String name = new String(messageBytes, StandardCharsets.UTF_8);
-					Client client = new Client(socket, random.nextInt(10000), name.trim().split("~!")[0],
-							name.trim().split("~1")[1]);
+					String token = "";
+					try {
+						token = name.trim().split("~!")[1];
+					} catch (Exception ig) {
+						System.out.println("Incoming token returned nothing, ignoring..");
+					}
+					Client client = new Client(socket, random.nextInt(10000), name.trim().split("~!")[0], token);
 					if (HardScene.clients.size() > HardScene.config.maxClients) {
 						System.out.println(client.address
 								+ " has been denied access to connect due to the max clients threshold.");
