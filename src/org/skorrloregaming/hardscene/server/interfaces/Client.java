@@ -8,12 +8,14 @@ public class Client {
 	public String address = "/0.0.0.0";
 	public Integer id = 0;
 	public String name = "unspecified";
+	public String token = "unspecified";
 	
-	public Client(Socket socket, Integer id, String name){
+	public Client(Socket socket, Integer id, String name, String token){
 		this.socket = socket;
 		this.address = socket.getRemoteSocketAddress().toString().split(":")[0];
 		this.id = id;
 		this.name = name;
+		this.token = token;
 	}
 	
 }
