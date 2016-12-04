@@ -8,11 +8,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
-public class Properties {
+public class LocalizationManager {
 	
 	File file;
 	
-	public Properties(File file){
+	public LocalizationManager(File file){
 		this.file = file;
 		if (!file.exists()){
 			try {

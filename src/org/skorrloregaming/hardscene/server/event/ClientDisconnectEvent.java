@@ -3,15 +3,15 @@ package org.skorrloregaming.hardscene.server.event;
 import java.io.IOException;
 
 import org.skorrloregaming.hardscene.server.HardScene;
-import org.skorrloregaming.hardscene.server.impl.ClientImpl;
+import org.skorrloregaming.hardscene.server.interfaces.Client;
 
 public class ClientDisconnectEvent {
 	
-	public ClientDisconnectEvent(ClientImpl client) throws IOException{
+	public ClientDisconnectEvent(Client client) throws IOException{
 		new ClientDisconnectEvent(client, false);
 	}
 	
-	public ClientDisconnectEvent(ClientImpl client, boolean direct) throws IOException{
+	public ClientDisconnectEvent(Client client, boolean direct) throws IOException{
 		try {
 			client.socket.close();
 		} catch (Exception ignored) {}
@@ -20,7 +20,7 @@ public class ClientDisconnectEvent {
 			if (HardScene.clients.containsKey(client.id)){
 				HardScene.clients.remove(client.id);
 			}
-			String message = client.displayName + " has quit the server.";
+			String message = client.name + " has quit the server.";
 			System.out.println(message);
 			HardScene.broadcast(message);
 		}

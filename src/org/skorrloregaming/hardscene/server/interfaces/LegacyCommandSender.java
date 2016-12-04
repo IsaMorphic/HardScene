@@ -1,6 +1,6 @@
-package org.skorrloregaming.hardscene.server.impl;
+package org.skorrloregaming.hardscene.server.interfaces;
 
-public class LoggerImpl {
+public class LegacyCommandSender {
 	
 	public void sendMessage(String message){ System.out.println(message); }
 	

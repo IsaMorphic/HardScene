@@ -8,7 +8,7 @@ import java.util.Random;
 import org.skorrloregaming.hardscene.server.HardScene;
 import org.skorrloregaming.hardscene.server.event.ClientConnectEvent;
 import org.skorrloregaming.hardscene.server.event.ClientDisconnectEvent;
-import org.skorrloregaming.hardscene.server.impl.ClientImpl;
+import org.skorrloregaming.hardscene.server.interfaces.Client;
 
 public class HardScene_LoopThread implements Runnable{
 	
@@ -39,7 +39,7 @@ public class HardScene_LoopThread implements Runnable{
 					System.out.println(socket.getRemoteSocketAddress().toString() + " closed its socket before it could be processed.");
 				}else{
 					String name = new String(messageBytes, StandardCharsets.UTF_8);
-					ClientImpl client = new ClientImpl(socket, random.nextInt(10000), name.trim());
+					Client client = new Client(socket, random.nextInt(10000), name.trim());
 					if (HardScene.clients.size() > HardScene.config.maxClients){
 						System.out.println(client.address +" has been denied access to connect due to the max clients threshold.");
 						try {

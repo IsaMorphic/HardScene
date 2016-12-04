@@ -10,23 +10,23 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Scanner;
 
-import org.skorrloregaming.hardscene.server.config.Config;
-import org.skorrloregaming.hardscene.server.config.Properties;
+import org.skorrloregaming.hardscene.server.config.ConfigurationManager;
+import org.skorrloregaming.hardscene.server.config.LocalizationManager;
 import org.skorrloregaming.hardscene.server.event.CommandProcessEvent;
-import org.skorrloregaming.hardscene.server.impl.ClientImpl;
-import org.skorrloregaming.hardscene.server.impl.LoggerImpl;
+import org.skorrloregaming.hardscene.server.interfaces.Client;
+import org.skorrloregaming.hardscene.server.interfaces.LegacyCommandSender;
 import org.skorrloregaming.hardscene.server.thread.HardScene_LoopThread;
 
 public class HardScene {
 
 	public static boolean running = false;
-	public static HashMap<Integer, ClientImpl> clients = new HashMap<>();
+	public static HashMap<Integer, Client> clients = new HashMap<>();
 	public static ServerSocket server = null;
-	public static Config config = null;
+	public static ConfigurationManager config = null;
 	public static boolean insecure = false;
 
-	public static Properties bannedManager = null;
-	public static Properties opManager = null;
+	public static LocalizationManager bannedManager = null;
+	public static LocalizationManager opManager = null;
 
 	public static String frameName = "HardScene";
 
@@ -40,8 +40,8 @@ public class HardScene {
 	}
 
 	public void onEnable() {
-		opManager = new Properties(new File("hardscene_operators.properties"));
-		bannedManager = new Properties(new File("hardscene_banned.properties"));
+		opManager = new LocalizationManager(new File("hardscene_operators.properties"));
+		bannedManager = new LocalizationManager(new File("hardscene_banned.properties"));
 		startServer();
 	}
 
@@ -50,7 +50,7 @@ public class HardScene {
 			return false;
 		running = true;
 		try {
-			config = new Config();
+			config = new ConfigurationManager();
 		} catch (IOException e1) {
 			e1.printStackTrace();
 			System.exit(-1);
@@ -71,7 +71,7 @@ public class HardScene {
 		while (running) {
 			System.out.print("> ");
 			String input = scanner.nextLine();
-			new CommandProcessEvent(input.split(" "), new LoggerImpl());
+			new CommandProcessEvent(input.split(" "), new LegacyCommandSender());
 		}
 		scanner.close();
 		return true;
@@ -115,7 +115,7 @@ public class HardScene {
 	public static void broadcast(String message) throws IOException {
 		log(message);
 		byte[] messageBytes = message.getBytes();
-		for (ClientImpl c : clients.values()) {
+		for (Client c : clients.values()) {
 			c.socket.getOutputStream().write(messageBytes, 0, messageBytes.length);
 			c.socket.getOutputStream().flush();
 		}

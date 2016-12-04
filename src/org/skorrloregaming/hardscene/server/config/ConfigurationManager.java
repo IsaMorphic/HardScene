@@ -6,14 +6,14 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Properties;
 
-public class Config {
+public class ConfigurationManager {
 
 	public int port = 28894;
 	public int maxClients = 50;
 	public String hash = "8/0/2/7";
 	public boolean log = true;
 	
-	public Config() throws IOException{
+	public ConfigurationManager() throws IOException{
 		    File file = new File("hardscene.properties");
 		    Properties p = new Properties();
 		    if (file.exists()){

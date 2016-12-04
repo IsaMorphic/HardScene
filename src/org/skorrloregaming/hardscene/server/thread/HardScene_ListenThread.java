@@ -4,13 +4,13 @@ import java.nio.charset.StandardCharsets;
 
 import org.skorrloregaming.hardscene.server.HardScene;
 import org.skorrloregaming.hardscene.server.event.ClientDisconnectEvent;
-import org.skorrloregaming.hardscene.server.impl.ClientImpl;
+import org.skorrloregaming.hardscene.server.interfaces.Client;
 
 public class HardScene_ListenThread implements Runnable {
 
-	ClientImpl client = null;
+	Client client = null;
 
-	public HardScene_ListenThread(ClientImpl client) {
+	public HardScene_ListenThread(Client client) {
 		this.client = client;
 	}
 

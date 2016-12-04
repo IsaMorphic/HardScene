@@ -2,13 +2,13 @@ package org.skorrloregaming.hardscene.server.event;
 
 import java.util.HashMap;
 import org.skorrloregaming.hardscene.server.HardScene;
-import org.skorrloregaming.hardscene.server.impl.ClientImpl;
-import org.skorrloregaming.hardscene.server.impl.LoggerImpl;
+import org.skorrloregaming.hardscene.server.interfaces.Client;
+import org.skorrloregaming.hardscene.server.interfaces.LegacyCommandSender;
 
 public class CommandProcessEvent {
 
 	@SuppressWarnings("unchecked")
-	public CommandProcessEvent(String[] args, LoggerImpl logger) {
+	public CommandProcessEvent(String[] args, LegacyCommandSender logger) {
 		try {
 			if (args[0].equalsIgnoreCase("help")) {
 				viewHelp(logger);
@@ -16,8 +16,8 @@ public class CommandProcessEvent {
 				if (args.length >= 2) {
 					String address = "/" + args[1];
 					boolean result = HardScene.bannedManager.addProperty(address);
-					HashMap<Integer, ClientImpl> array = ((HashMap<Integer, ClientImpl>) HardScene.clients.clone());
-					for (ClientImpl c : array.values()) {
+					HashMap<Integer, Client> array = ((HashMap<Integer, Client>) HardScene.clients.clone());
+					for (Client c : array.values()) {
 						String clientAddress = c.address.split(":")[0];
 						if (clientAddress.equals(address)) {
 							new ClientDisconnectEvent(c, true);
@@ -50,13 +50,24 @@ public class CommandProcessEvent {
 				} else {
 					logger.sendMessage("The server socket is not properly running.");
 				}
-			} else if (args[0].equalsIgnoreCase("start")) {
-				if (HardScene.legacy) {
-					logger.sendMessage("Failed. Command disabled on legacy HardScene.");
-					return;
-				}
+			} else if (args[0].equalsIgnoreCase("toggle")) {
 				if (HardScene.running) {
-					logger.sendMessage("Failed. The server socket is already running.");
+					logger.sendMessage("Terminating server socket..");
+					try {
+						HardScene.server.close();
+						HardScene.running = false;
+						logger.sendMessage("Terminating child threads..");
+						HashMap<Integer, Client> array = ((HashMap<Integer, Client>) HardScene.clients.clone());
+						for (Client c : array.values()) {
+							try {
+								new ClientDisconnectEvent(c, true);
+							} catch (Exception ignored) {
+							}
+						}
+						HardScene.clients.clear();
+					} catch (Exception ignored) {
+					}
+					logger.sendMessage("Success.");
 					return;
 				} else {
 					logger.sendMessage("Starting server socket and child threads..");
@@ -67,31 +78,10 @@ public class CommandProcessEvent {
 						logger.sendMessage("Failed. An internal error occurred, check logs for more information.");
 					}
 				}
-			} else if (args[0].equalsIgnoreCase("stop")) {
-				if (!HardScene.running) {
-					logger.sendMessage("Failed. The server socket has already been stopped.");
-					return;
-				}
-				logger.sendMessage("Terminating server socket..");
-				try {
-					HardScene.server.close();
-					HardScene.running = false;
-					logger.sendMessage("Terminating child threads..");
-					HashMap<Integer, ClientImpl> array = ((HashMap<Integer, ClientImpl>) HardScene.clients.clone());
-					for (ClientImpl c : array.values()) {
-						try {
-							new ClientDisconnectEvent(c, true);
-						} catch (Exception ignored) {
-						}
-					}
-					HardScene.clients.clear();
-				} catch (Exception ignored) {
-				}
-				logger.sendMessage("Success.");
 			} else if (args[0].equalsIgnoreCase("kickall")) {
-				HashMap<Integer, ClientImpl> array = ((HashMap<Integer, ClientImpl>) HardScene.clients.clone());
+				HashMap<Integer, Client> array = ((HashMap<Integer, Client>) HardScene.clients.clone());
 				logger.sendMessage("Kicking all connected clients from the server forcibly..");
-				for (ClientImpl c : array.values()) {
+				for (Client c : array.values()) {
 					try {
 						new ClientDisconnectEvent(c, true);
 					} catch (Exception ignored) {
@@ -105,7 +95,7 @@ public class CommandProcessEvent {
 						logger.sendMessage("Failed. Could not find a client with the ID:" + args[1] + ".");
 						return;
 					}
-					ClientImpl c = HardScene.clients.get(Integer.parseInt(args[1]));
+					Client c = HardScene.clients.get(Integer.parseInt(args[1]));
 					logger.sendMessage("Kicking the specified client from the server..");
 					try {
 						new ClientDisconnectEvent(c, true);
@@ -135,7 +125,7 @@ public class CommandProcessEvent {
 						logger.sendMessage("Could not find a client with the ID:" + args[1] + ".");
 						return;
 					}
-					ClientImpl c = HardScene.clients.get(Integer.parseInt(args[1]));
+					Client c = HardScene.clients.get(Integer.parseInt(args[1]));
 					String message = logger.getName() + " says..";
 					for (int i = 2; i < args.length; i++) {
 						message += " " + args[i];
@@ -156,9 +146,9 @@ public class CommandProcessEvent {
 					if (args[1].equalsIgnoreCase("/a")) {
 						logger.sendMessage("Listing current clients in complete mode..");
 						logger.sendMessage("[ Address | ID | Display Name ]");
-						HashMap<Integer, ClientImpl> array = ((HashMap<Integer, ClientImpl>) HardScene.clients.clone());
-						for (ClientImpl c : array.values()) {
-							logger.sendMessage(c.address.toString() + " - " + c.id + " - " + c.displayName);
+						HashMap<Integer, Client> array = ((HashMap<Integer, Client>) HardScene.clients.clone());
+						for (Client c : array.values()) {
+							logger.sendMessage(c.address.toString() + " - " + c.id + " - " + c.name);
 						}
 						logger.sendMessage("Success.");
 						return;
@@ -169,9 +159,9 @@ public class CommandProcessEvent {
 				}
 				logger.sendMessage("Listing current clients in safe mode..");
 				logger.sendMessage("[ ID | Display Name ]");
-				HashMap<Integer, ClientImpl> array = ((HashMap<Integer, ClientImpl>) HardScene.clients.clone());
-				for (ClientImpl c : array.values()) {
-					logger.sendMessage(c.id + " - " + c.displayName);
+				HashMap<Integer, Client> array = ((HashMap<Integer, Client>) HardScene.clients.clone());
+				for (Client c : array.values()) {
+					logger.sendMessage(c.id + " - " + c.name);
 				}
 				logger.sendMessage("Success.");
 			} else {
@@ -185,7 +175,7 @@ public class CommandProcessEvent {
 
 	String preCommandSyntax = "";
 
-	public void viewHelp(LoggerImpl logger) {
+	public void viewHelp(LegacyCommandSender logger) {
 		logger.sendMessage("HardScene - Commands");
 		logger.sendMessage("" + preCommandSyntax + "help - Displays this listing.");
 		logger.sendMessage("" + preCommandSyntax + "ban <ip> - Attemps to ban the IP from the server.");
