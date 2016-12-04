@@ -2,6 +2,7 @@ package org.skorrloregaming.hardscene.server.event;
 
 import java.util.HashMap;
 import org.skorrloregaming.hardscene.server.HardScene;
+import org.skorrloregaming.hardscene.server.config.ConfigurationManager;
 import org.skorrloregaming.hardscene.server.interfaces.Client;
 import org.skorrloregaming.hardscene.server.interfaces.LegacyCommandSender;
 
@@ -20,8 +21,7 @@ public class CommandProcessEvent {
 					for (Client c : array.values()) {
 						String clientAddress = c.address.split(":")[0];
 						if (clientAddress.equals(address)) {
-							new ClientDisconnectEvent(c, true);
-							HardScene.clients.remove(c);
+							c.closeTunnel();
 						}
 					}
 					if (result) {
@@ -50,6 +50,9 @@ public class CommandProcessEvent {
 				} else {
 					logger.sendMessage("The server socket is not properly running.");
 				}
+			} else if (args[0].equalsIgnoreCase("reload")){
+				HardScene.config = new ConfigurationManager();
+				logger.sendMessage("Success. Legacy configuration reloaded.");
 			} else if (args[0].equalsIgnoreCase("toggle")) {
 				if (HardScene.running) {
 					logger.sendMessage("Terminating server socket..");
@@ -59,10 +62,7 @@ public class CommandProcessEvent {
 						logger.sendMessage("Terminating child threads..");
 						HashMap<Integer, Client> array = ((HashMap<Integer, Client>) HardScene.clients.clone());
 						for (Client c : array.values()) {
-							try {
-								new ClientDisconnectEvent(c, true);
-							} catch (Exception ignored) {
-							}
+							c.closeTunnel();
 						}
 						HardScene.clients.clear();
 					} catch (Exception ignored) {
@@ -82,10 +82,7 @@ public class CommandProcessEvent {
 				HashMap<Integer, Client> array = ((HashMap<Integer, Client>) HardScene.clients.clone());
 				logger.sendMessage("Kicking all connected clients from the server forcibly..");
 				for (Client c : array.values()) {
-					try {
-						new ClientDisconnectEvent(c, true);
-					} catch (Exception ignored) {
-					}
+					c.closeTunnel();
 				}
 				HardScene.clients.clear();
 				logger.sendMessage("Success. All clients have been kicked from the server.");
@@ -98,7 +95,7 @@ public class CommandProcessEvent {
 					Client c = HardScene.clients.get(Integer.parseInt(args[1]));
 					logger.sendMessage("Kicking the specified client from the server..");
 					try {
-						new ClientDisconnectEvent(c, true);
+						c.closeTunnel();
 						HardScene.clients.remove(c);
 					} catch (Exception ignored) {
 					}

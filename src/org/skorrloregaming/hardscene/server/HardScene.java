@@ -26,8 +26,7 @@ public class HardScene {
 	public static boolean insecure = false;
 
 	public static LocalizationManager bannedManager = null;
-	public static LocalizationManager opManager = null;
-
+	
 	public static String frameName = "HardScene";
 
 	public static HardScene instance = null;
@@ -40,7 +39,6 @@ public class HardScene {
 	}
 
 	public void onEnable() {
-		opManager = new LocalizationManager(new File("hardscene_operators.properties"));
 		bannedManager = new LocalizationManager(new File("hardscene_banned.properties"));
 		startServer();
 	}

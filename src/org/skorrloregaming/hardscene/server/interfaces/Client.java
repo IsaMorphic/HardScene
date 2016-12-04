@@ -1,5 +1,6 @@
 package org.skorrloregaming.hardscene.server.interfaces;
 
+import java.io.IOException;
 import java.net.Socket;
 
 public class Client {
@@ -16,6 +17,27 @@ public class Client {
 		this.id = id;
 		this.name = name;
 		this.token = token;
+	}
+	
+	public boolean sendMessage(String msg){
+		try {
+			socket.getOutputStream().write(msg.getBytes());
+			socket.getOutputStream().flush();
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean closeTunnel(){
+		try {
+			socket.close();
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 	
 }
