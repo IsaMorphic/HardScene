@@ -45,7 +45,6 @@ public class HardScene_LoopThread implements Runnable {
 					try {
 						token = name.trim().split("~!")[1];
 					} catch (Exception ig) {
-						System.out.println("Incoming token returned nothing, ignoring..");
 					}
 					Client client = new Client(socket, random.nextInt(10000), name.trim().split("~!")[0], token);
 					if (HardScene.clients.size() > HardScene.config.maxClients) {
