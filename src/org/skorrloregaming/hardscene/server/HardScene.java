@@ -6,8 +6,9 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Scanner;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.skorrloregaming.hardscene.server.config.ConfigurationManager;
 import org.skorrloregaming.hardscene.server.config.LocalizationManager;
@@ -17,9 +18,10 @@ import org.skorrloregaming.hardscene.server.interfaces.LegacyCommandSender;
 import org.skorrloregaming.hardscene.server.thread.HardScene_LoopThread;
 
 public class HardScene {
+	
+	public static ConcurrentMap<Integer, Client> clients = new ConcurrentHashMap<>();
 
 	public static boolean running = false;
-	public static HashMap<Integer, Client> clients = new HashMap<>();
 	public static ServerSocket server = null;
 	public static ConfigurationManager config = null;
 	public static boolean insecure = false;

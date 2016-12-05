@@ -1,6 +1,5 @@
 package org.skorrloregaming.hardscene.server.event;
 
-import java.util.HashMap;
 import org.skorrloregaming.hardscene.server.HardScene;
 import org.skorrloregaming.hardscene.server.config.ConfigurationManager;
 import org.skorrloregaming.hardscene.server.interfaces.Client;
@@ -8,7 +7,6 @@ import org.skorrloregaming.hardscene.server.interfaces.LegacyCommandSender;
 
 public class CommandProcessEvent {
 
-	@SuppressWarnings("unchecked")
 	public CommandProcessEvent(String[] args, LegacyCommandSender logger) {
 		try {
 			if (args[0].equalsIgnoreCase("help")) {
@@ -17,8 +15,7 @@ public class CommandProcessEvent {
 				if (args.length >= 2) {
 					String address = "/" + args[1];
 					boolean result = HardScene.bannedManager.addProperty(address);
-					HashMap<Integer, Client> array = ((HashMap<Integer, Client>) HardScene.clients.clone());
-					for (Client c : array.values()) {
+					for (Client c : HardScene.clients.values()) {
 						String clientAddress = c.address.split(":")[0];
 						if (clientAddress.equals(address)) {
 							c.closeTunnel();
@@ -60,8 +57,7 @@ public class CommandProcessEvent {
 						HardScene.server.close();
 						HardScene.running = false;
 						logger.sendMessage("Terminating child threads..");
-						HashMap<Integer, Client> array = ((HashMap<Integer, Client>) HardScene.clients.clone());
-						for (Client c : array.values()) {
+						for (Client c : HardScene.clients.values()) {
 							c.closeTunnel();
 						}
 						HardScene.clients.clear();
@@ -79,9 +75,8 @@ public class CommandProcessEvent {
 					}
 				}
 			} else if (args[0].equalsIgnoreCase("kickall")) {
-				HashMap<Integer, Client> array = ((HashMap<Integer, Client>) HardScene.clients.clone());
 				logger.sendMessage("Kicking all connected clients from the server forcibly..");
-				for (Client c : array.values()) {
+				for (Client c : HardScene.clients.values()) {
 					c.closeTunnel();
 				}
 				HardScene.clients.clear();
@@ -141,12 +136,9 @@ public class CommandProcessEvent {
 				if (args.length >= 2) {
 					if (args[1].equalsIgnoreCase("/a")) {
 						logger.sendMessage("Listing current clients in complete mode..");
-						logger.sendMessage("[ Address | ID | Display Name ]");
-						HashMap<Integer, Client> array = ((HashMap<Integer, Client>) HardScene.clients.clone());
-						for (Client c : array.values()) {
-							logger.sendMessage(c.address.toString() + " - " + c.id + " - " + c.name);
+						for (Client c : HardScene.clients.values()) {
+							logger.sendMessage(c.address.toString() + " / " + c.id + " / " + c.name);
 						}
-						logger.sendMessage("Success.");
 						return;
 					} else {
 						logger.sendMessage("Failed. Syntax: '" + preCommandSyntax + "list [/a]'");
@@ -154,12 +146,9 @@ public class CommandProcessEvent {
 					}
 				}
 				logger.sendMessage("Listing current clients in safe mode..");
-				logger.sendMessage("[ ID | Display Name ]");
-				HashMap<Integer, Client> array = ((HashMap<Integer, Client>) HardScene.clients.clone());
-				for (Client c : array.values()) {
-					logger.sendMessage(c.id + " - " + c.name);
+				for (Client c : HardScene.clients.values()) {
+					logger.sendMessage("0.0.0.0 / " + c.id + " / " + c.name);
 				}
-				logger.sendMessage("Success.");
 			} else {
 				logger.sendMessage("Failed. The specified command was unable to be located.");
 			}
