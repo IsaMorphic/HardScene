@@ -13,7 +13,7 @@ public class CommandProcessEvent {
 				viewHelp(logger);
 			} else if (args[0].equalsIgnoreCase("ban")) {
 				if (args.length >= 2) {
-					String address = "/" + args[1];
+					String address = args[1];
 					boolean result = HardScene.bannedManager.addProperty(address);
 					for (Client c : HardScene.clients.values()) {
 						String clientAddress = c.address.split(":")[0];
@@ -31,7 +31,7 @@ public class CommandProcessEvent {
 				}
 			} else if (args[0].equalsIgnoreCase("pardon")) {
 				if (args.length >= 2) {
-					String address = "/" + args[1];
+					String address = args[1];
 					boolean result = HardScene.bannedManager.removeProperty(address);
 					if (result) {
 						logger.sendMessage("Success. That address is now allowed to connect.");
