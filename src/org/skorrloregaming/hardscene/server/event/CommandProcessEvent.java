@@ -96,7 +96,6 @@ public class CommandProcessEvent {
 					logger.sendMessage("Kicking the specified client from the server..");
 					try {
 						c.closeTunnel();
-						HardScene.clients.remove(c);
 					} catch (Exception ignored) {
 					}
 					logger.sendMessage("Success.");
