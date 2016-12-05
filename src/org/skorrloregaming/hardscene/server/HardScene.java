@@ -1,6 +1,5 @@
 package org.skorrloregaming.hardscene.server;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -101,9 +100,8 @@ public class HardScene {
 				if (!file.exists())
 					file.createNewFile();
 				FileWriter writer = new FileWriter(file, true);
-				BufferedWriter bufferedWriter = new BufferedWriter(writer);
-				bufferedWriter.write(logMessage, 0, logMessage.length());
-				bufferedWriter.close();
+				writer.append(logMessage);
+				writer.close();
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}

@@ -10,7 +10,6 @@ public class ConfigurationManager {
 
 	public int port = 28894;
 	public int maxClients = 50;
-	public String hash = "8/0/2/7";
 	public boolean log = true;
 	
 	public ConfigurationManager() throws IOException{
@@ -21,7 +20,6 @@ public class ConfigurationManager {
 		    		p.load(reader);
 		    		port = Integer.parseInt(p.getProperty("port"));
 		    		maxClients = Integer.parseInt(p.getProperty("maxClients"));
-		    		hash = p.getProperty("hash");
 		    		log = Boolean.parseBoolean(p.getProperty("log"));
 		    	}
 		    }else{
@@ -35,7 +33,6 @@ public class ConfigurationManager {
 		        }
 		        writer.println("port=28894");
 		        writer.println("maxClients=50");
-		        writer.println("hash=8/0/2/7");
 		        writer.println("log=true");
 		        writer.close();
 	    	}
