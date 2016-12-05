@@ -7,7 +7,6 @@ import java.util.Random;
 
 import org.skorrloregaming.hardscene.server.HardScene;
 import org.skorrloregaming.hardscene.server.event.ClientConnectEvent;
-import org.skorrloregaming.hardscene.server.event.ClientDisconnectEvent;
 import org.skorrloregaming.hardscene.server.interfaces.Client;
 
 public class HardScene_LoopThread implements Runnable {
@@ -18,25 +17,13 @@ public class HardScene_LoopThread implements Runnable {
 		while (HardScene.running) {
 			try {
 				socket = HardScene.server.accept();
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (Exception ig) {
 				break;
 			}
+			Random ran = new Random();
+			byte[] messageBytes = new byte[24];
 			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
-			Random random = new Random();
-			byte[] messageBytes = null;
-			try {
-				messageBytes = new byte[24];
-				int returnConnectivity = -1;
-				try {
-					returnConnectivity = socket.getInputStream().read(messageBytes, 0, messageBytes.length);
-				} catch (Exception ignored) {
-				}
-				if (returnConnectivity == -1) {
+				if (socket.getInputStream().read(messageBytes) == -1) {
 					System.out.println(socket.getRemoteSocketAddress().toString()
 							+ " closed its socket before it could be processed.");
 				} else {
@@ -46,20 +33,14 @@ public class HardScene_LoopThread implements Runnable {
 						token = name.trim().split("~!")[1];
 					} catch (Exception ig) {
 					}
-					Client client = new Client(socket, random.nextInt(10000), name.trim().split("~!")[0], token);
+					Client client = new Client(socket, ran.nextInt(900) + 100, name.trim().split("~!")[0], token);
 					if (HardScene.clients.size() > HardScene.config.maxClients) {
 						System.out.println(client.address
 								+ " has been denied access to connect due to the max clients threshold.");
-						try {
-							new ClientDisconnectEvent(client, true);
-						} catch (Exception ignored) {
-						}
+						client.closeTunnel();
 					} else if (HardScene.bannedManager.propertyExists(client.address)) {
 						System.out.println(client.address + " has been denied access to connect due to being banned.");
-						try {
-							new ClientDisconnectEvent(client, true);
-						} catch (Exception ignored) {
-						}
+						client.closeTunnel();
 					} else {
 						try {
 							new ClientConnectEvent(client);
