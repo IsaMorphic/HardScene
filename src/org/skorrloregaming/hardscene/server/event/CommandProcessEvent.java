@@ -47,7 +47,7 @@ public class CommandProcessEvent {
 				} else {
 					logger.sendMessage("The server socket is not properly running.");
 				}
-			} else if (args[0].equalsIgnoreCase("reload")){
+			} else if (args[0].equalsIgnoreCase("reload")) {
 				HardScene.config = new ConfigurationManager();
 				logger.sendMessage("Success. Legacy configuration reloaded.");
 			} else if (args[0].equalsIgnoreCase("toggle")) {
@@ -165,14 +165,12 @@ public class CommandProcessEvent {
 		logger.sendMessage("" + preCommandSyntax + "help - Displays this listing.");
 		logger.sendMessage("" + preCommandSyntax + "ban <ip> - Attemps to ban the IP from the server.");
 		logger.sendMessage("" + preCommandSyntax + "pardon <ip> - Attempts to remove the IP from banned players.");
-		logger.sendMessage(
-				"" + preCommandSyntax + "kick <clientID> - Attemps to kick the specified client from the server.");
+		logger.sendMessage("" + preCommandSyntax + "kick <clientID> - Attemps to kick the specified client from the server.");
 		logger.sendMessage("" + preCommandSyntax + "kickall - Attemps to kick all connected clients from the server.");
 		logger.sendMessage("" + preCommandSyntax + "check - Attempts to check if the server is running or not.");
 		logger.sendMessage("" + preCommandSyntax + "stop - Attempts to stop the server.");
 		logger.sendMessage("" + preCommandSyntax + "list [/a] - Attemps to list the connected clients on the server.");
-		logger.sendMessage(
-				"" + preCommandSyntax + "tell <clientID> <message> - Sends a message to the specified client.");
+		logger.sendMessage("" + preCommandSyntax + "tell <clientID> <message> - Sends a message to the specified client.");
 		logger.sendMessage("" + preCommandSyntax + "broadcast <message> - Broadcasts a message to the server.");
 	}
 

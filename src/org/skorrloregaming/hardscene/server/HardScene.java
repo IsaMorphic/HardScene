@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
@@ -18,7 +19,7 @@ import org.skorrloregaming.hardscene.server.interfaces.LegacyCommandSender;
 import org.skorrloregaming.hardscene.server.thread.HardScene_LoopThread;
 
 public class HardScene {
-	
+
 	public static ConcurrentMap<Integer, Client> clients = new ConcurrentHashMap<>();
 
 	public static boolean running = false;
@@ -27,7 +28,7 @@ public class HardScene {
 	public static boolean insecure = false;
 
 	public static LocalizationManager bannedManager = null;
-	
+
 	public static String frameName = "HardScene";
 
 	public static HardScene instance = null;
@@ -42,6 +43,10 @@ public class HardScene {
 	public void onEnable() {
 		bannedManager = new LocalizationManager(new File("hardscene_banned.properties"));
 		startServer();
+	}
+
+	public static String formatAddress(Socket socket) {
+		return socket.getRemoteSocketAddress().toString().split(":")[0].replace("/", "");
 	}
 
 	public boolean startServer() {

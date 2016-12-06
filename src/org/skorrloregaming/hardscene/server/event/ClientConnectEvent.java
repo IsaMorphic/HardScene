@@ -6,15 +6,15 @@ import org.skorrloregaming.hardscene.server.HardScene;
 import org.skorrloregaming.hardscene.server.interfaces.Client;
 
 public class ClientConnectEvent {
-	
-	public ClientConnectEvent(Client client) throws IOException{
+
+	public ClientConnectEvent(Client client) throws IOException {
 		new ClientConnectEvent(client, false);
 	}
-	
-	public ClientConnectEvent(Client client, boolean direct) throws IOException{
-		if (!direct){
-			if (!HardScene.clients.containsKey(client.id)){
-				HardScene.clients.put(client.id, client);	
+
+	public ClientConnectEvent(Client client, boolean direct) throws IOException {
+		if (!direct) {
+			if (!HardScene.clients.containsKey(client.id)) {
+				HardScene.clients.put(client.id, client);
 			}
 		}
 		System.out.println(client.address + " has joined the server.");
@@ -22,5 +22,5 @@ public class ClientConnectEvent {
 		System.out.println(message);
 		HardScene.broadcast(message);
 	}
-	
+
 }

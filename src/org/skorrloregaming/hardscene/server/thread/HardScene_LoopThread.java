@@ -24,8 +24,7 @@ public class HardScene_LoopThread implements Runnable {
 			byte[] messageBytes = new byte[24];
 			try {
 				if (socket.getInputStream().read(messageBytes) == -1) {
-					System.out.println(socket.getRemoteSocketAddress().toString()
-							+ " closed its socket before it could be processed.");
+					System.out.println(HardScene.formatAddress(socket) + " closed its socket before it could be processed.");
 				} else {
 					String name = new String(messageBytes, StandardCharsets.UTF_8);
 					String token = "";
@@ -35,8 +34,7 @@ public class HardScene_LoopThread implements Runnable {
 					}
 					Client client = new Client(socket, ran.nextInt(900) + 100, name.trim().split("~!")[0], token);
 					if (HardScene.clients.size() > HardScene.config.maxClients) {
-						System.out.println(client.address
-								+ " has been denied access to connect due to the max clients threshold.");
+						System.out.println(client.address + " has been denied access to connect due to the max clients threshold.");
 						client.closeTunnel();
 					} else if (HardScene.bannedManager.propertyExists(client.address)) {
 						System.out.println(client.address + " has been denied access to connect due to being banned.");
