@@ -49,7 +49,11 @@ public class CommandProcessEvent {
 				}
 			} else if (args[0].equalsIgnoreCase("reload")) {
 				HardScene.config = new ConfigurationManager();
-				logger.sendMessage("Success. Legacy configuration reloaded.");
+				if (HardScene.running) {
+					new CommandProcessEvent("toggle ".split(" "), logger);
+					new CommandProcessEvent("toggle ".split(" "), logger);
+				}
+				logger.sendMessage("Success. Legacy configuration file reloaded.");
 			} else if (args[0].equalsIgnoreCase("toggle")) {
 				if (HardScene.running) {
 					logger.sendMessage("Terminating server socket..");
@@ -74,13 +78,6 @@ public class CommandProcessEvent {
 						logger.sendMessage("Failed. An internal error occurred, check logs for more information.");
 					}
 				}
-			} else if (args[0].equalsIgnoreCase("kickall")) {
-				logger.sendMessage("Kicking all connected clients from the server forcibly..");
-				for (Client c : HardScene.clients.values()) {
-					c.closeTunnel();
-				}
-				HardScene.clients.clear();
-				logger.sendMessage("Success. All clients have been kicked from the server.");
 			} else if (args[0].equalsIgnoreCase("kick")) {
 				if (args.length >= 2) {
 					if (!HardScene.clients.containsKey(Integer.parseInt(args[1]))) {
@@ -95,7 +92,7 @@ public class CommandProcessEvent {
 					}
 					logger.sendMessage("Success.");
 				} else {
-					logger.sendMessage("Failed. Syntax: '" + preCommandSyntax + "kick <clientID>'");
+					logger.sendMessage("Failed. Syntax: '" + preCommandSyntax + "kick <id>'");
 				}
 			} else if (args[0].equalsIgnoreCase("broadcast")) {
 				if (args.length >= 2) {
@@ -130,7 +127,7 @@ public class CommandProcessEvent {
 					logger.sendMessage("Success. Sent message privately to client " + c.id + ".");
 					return;
 				} else {
-					logger.sendMessage("Failed. Syntax: '" + preCommandSyntax + "tell <clientID> <message>'");
+					logger.sendMessage("Failed. Syntax: '" + preCommandSyntax + "tell <id> <message>'");
 				}
 			} else if (args[0].equalsIgnoreCase("list")) {
 				if (args.length >= 2) {
@@ -150,11 +147,11 @@ public class CommandProcessEvent {
 					logger.sendMessage("0.0.0.0 / " + c.id + " / " + c.name);
 				}
 			} else {
-				logger.sendMessage("Failed. The specified command was unable to be located.");
+				logger.sendMessage("Failed. The specified command was not found.");
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			logger.sendMessage("Failed. An internal error has occurred, check logs for more information.");
+			logger.sendMessage("Failed. An error occured, check console for more info.");
 		}
 	}
 
@@ -162,16 +159,16 @@ public class CommandProcessEvent {
 
 	public void viewHelp(LegacyCommandSender logger) {
 		logger.sendMessage("HardScene - Commands");
-		logger.sendMessage("" + preCommandSyntax + "help - Displays this listing.");
-		logger.sendMessage("" + preCommandSyntax + "ban <ip> - Attemps to ban the IP from the server.");
-		logger.sendMessage("" + preCommandSyntax + "pardon <ip> - Attempts to remove the IP from banned players.");
-		logger.sendMessage("" + preCommandSyntax + "kick <clientID> - Attemps to kick the specified client from the server.");
-		logger.sendMessage("" + preCommandSyntax + "kickall - Attemps to kick all connected clients from the server.");
-		logger.sendMessage("" + preCommandSyntax + "check - Attempts to check if the server is running or not.");
-		logger.sendMessage("" + preCommandSyntax + "stop - Attempts to stop the server.");
-		logger.sendMessage("" + preCommandSyntax + "list [/a] - Attemps to list the connected clients on the server.");
-		logger.sendMessage("" + preCommandSyntax + "tell <clientID> <message> - Sends a message to the specified client.");
-		logger.sendMessage("" + preCommandSyntax + "broadcast <message> - Broadcasts a message to the server.");
+		logger.sendMessage("" + preCommandSyntax + "help - Display this listing.");
+		logger.sendMessage("" + preCommandSyntax + "ban <id> - Ban client.");
+		logger.sendMessage("" + preCommandSyntax + "pardon <ip> - Pardon client.");
+		logger.sendMessage("" + preCommandSyntax + "kick <id> - Kick client.");
+		logger.sendMessage("" + preCommandSyntax + "check - Check state of server.");
+		logger.sendMessage("" + preCommandSyntax + "reload - Reload server config.");
+		logger.sendMessage("" + preCommandSyntax + "toggle - Toggle server state.");
+		logger.sendMessage("" + preCommandSyntax + "list [/a] - List clients.");
+		logger.sendMessage("" + preCommandSyntax + "tell <id> <msg> - Message client.");
+		logger.sendMessage("" + preCommandSyntax + "broadcast <msg> - Broadcast message.");
 	}
 
 }
