@@ -151,7 +151,7 @@ public class CommandProcessEvent {
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			logger.sendMessage("Failed. An error occured, check console for more info.");
+			logger.sendMessage("Failed. An internal error was encountered.");
 		}
 	}
 
@@ -160,7 +160,7 @@ public class CommandProcessEvent {
 	public void viewHelp(LegacyCommandSender logger) {
 		logger.sendMessage("HardScene - Commands");
 		logger.sendMessage("" + preCommandSyntax + "help - Display this listing.");
-		logger.sendMessage("" + preCommandSyntax + "ban <id> - Ban client.");
+		logger.sendMessage("" + preCommandSyntax + "ban <ip> - Ban client.");
 		logger.sendMessage("" + preCommandSyntax + "pardon <ip> - Pardon client.");
 		logger.sendMessage("" + preCommandSyntax + "kick <id> - Kick client.");
 		logger.sendMessage("" + preCommandSyntax + "check - Check state of server.");
