@@ -27,10 +27,10 @@ public class HardScene_LoopThread implements Runnable {
 			Matcher m = pattern.matcher(na.replace("_", ""));
 			patternMatch = m.find();
 			if (na.length() > 14 || na.length() < 4) {
-				socket.getOutputStream().write((System.lineSeparator() + "Please specify a name with a length between 4 and 16.").getBytes());
+				socket.getOutputStream().write(("Please specify a name with a length between 4 and 16." + System.lineSeparator()).getBytes());
 				socket.getOutputStream().flush();
 			} else if (patternMatch) {
-				socket.getOutputStream().write((System.lineSeparator() + "Invalid display name syntax, please try again.").getBytes());
+				socket.getOutputStream().write(("Invalid display name syntax, please try again." + System.lineSeparator()).getBytes());
 				socket.getOutputStream().flush();
 			}
 		}
