@@ -10,13 +10,15 @@ public class Client {
 	public Integer id = 0;
 	public String name = "unspecified";
 	public String token = "unspecified";
+	public boolean unsupportedClient = false;
 
-	public Client(Socket socket, Integer id, String name, String token) {
+	public Client(Socket socket, Integer id, String name, String token, boolean unsupportedClient) {
 		this.socket = socket;
 		this.address = socket.getRemoteSocketAddress().toString().split(":")[0].replace("/", "");
 		this.id = id;
 		this.name = name;
 		this.token = token;
+		this.unsupportedClient = unsupportedClient;
 	}
 
 	public boolean sendMessage(String msg) {

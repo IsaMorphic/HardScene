@@ -23,6 +23,9 @@ public class HardScene_ListenThread implements Runnable {
 				if (returnValue == -1)
 					break;
 				String message = new String(messageBytes, StandardCharsets.UTF_8).trim();
+				if (client.unsupportedClient) {
+					message = client.name + ": " + message;
+				}
 				if (returnValue == 0 || message != "") {
 					System.out.println(client.address.toString() + " (" + client.id + "): " + message);
 					HardScene.broadcast(message);
