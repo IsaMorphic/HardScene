@@ -117,9 +117,11 @@ public class HardScene {
 
 	public static void broadcast(String message) throws IOException {
 		log(message);
-		byte[] messageBytes = message.getBytes();
 		for (Client c : clients.values()) {
-			c.socket.getOutputStream().write(messageBytes, 0, messageBytes.length);
+			String format = message;
+			if (c.unsupportedClient)
+				format = format + '\r' + '\n';
+			c.socket.getOutputStream().write(format.getBytes());
 			c.socket.getOutputStream().flush();
 		}
 	}

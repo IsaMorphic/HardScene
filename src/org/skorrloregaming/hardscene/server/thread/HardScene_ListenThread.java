@@ -22,11 +22,12 @@ public class HardScene_ListenThread implements Runnable {
 				int returnValue = client.socket.getInputStream().read(messageBytes, 0, messageBytes.length);
 				if (returnValue == -1)
 					break;
-				String message = new String(messageBytes, StandardCharsets.UTF_8).trim();
+				String rawMessage = new String(messageBytes, StandardCharsets.UTF_8).trim();
+				String message = rawMessage;
 				if (client.unsupportedClient) {
 					message = client.name + ": " + message;
 				}
-				if (returnValue == 0 || message != "") {
+				if (returnValue != 0 && rawMessage.length() != 0) {
 					System.out.println(client.address.toString() + " (" + client.id + "): " + message);
 					HardScene.broadcast(message);
 				}
