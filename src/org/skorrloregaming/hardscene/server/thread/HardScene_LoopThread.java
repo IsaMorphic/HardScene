@@ -34,11 +34,19 @@ public class HardScene_LoopThread implements Runnable {
 				socket.getOutputStream().flush();
 			}
 		}
-		socket.getOutputStream().write("Auth Token: ".getBytes());
-		socket.getOutputStream().flush();
 		byte[] tokenBytes = new byte[24];
-		socket.getInputStream().read(tokenBytes);
-		socket.getInputStream().read(tokenBytes);
+		long resolute = -1;
+		while (resolute < 100) {
+			if (socket.getInputStream().available() > 0) socket.getInputStream().read(tokenBytes);
+			String line = "Auth Token: ";
+			if (resolute > -1) line = System.lineSeparator() + line;
+			socket.getOutputStream().write(line.getBytes());
+			socket.getOutputStream().flush();
+			long pastTime = System.currentTimeMillis();
+			socket.getInputStream().read(tokenBytes);
+			long newTime = System.currentTimeMillis();
+			resolute = newTime - pastTime;	
+		}
 		na = na + "~!" + new String(tokenBytes, StandardCharsets.UTF_8).toString();
 		return na;
 	}
