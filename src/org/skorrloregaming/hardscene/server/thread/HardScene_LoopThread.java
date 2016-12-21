@@ -18,9 +18,11 @@ public class HardScene_LoopThread implements Runnable {
 
 	private String unsupportedAuthentication(Socket socket) {
 		try {
+			Thread.sleep(350);
 			String na = "na";
 			boolean patternMatch = false;
 			while (na.length() > 14 || na.length() < 4 || patternMatch) {
+				if (socket.getInputStream().available() > 0) return "na";
 				socket.getOutputStream().write("Display Name: ".getBytes());
 				socket.getOutputStream().flush();
 				byte[] nameBytes = new byte[24];

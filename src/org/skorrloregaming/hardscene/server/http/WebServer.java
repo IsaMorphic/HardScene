@@ -56,7 +56,6 @@ public class WebServer implements Runnable {
 					try {
 						out.writeBytes(str + "\r\n");
 					} catch (IOException e) {
-						e.printStackTrace();
 					}
 			    }
 			}

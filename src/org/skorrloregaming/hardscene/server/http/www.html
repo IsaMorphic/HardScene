@@ -70,7 +70,7 @@
 				if (name && token) {
 					var letterNumber = /^[0-9a-zA-Z]+$/;
 					if (name.length > 3 && name.length < 15) {
-						if (name.match(letterNumber)) {
+						if (name.split("_").join("").match(letterNumber)) {
 							document.getElementById('loginPanel').style.display = 'none';
 							document.getElementById('perform').style.visibility = 'visible';
 							connect();
