@@ -118,12 +118,7 @@ public class CommandProcessEvent {
 					for (int i = 2; i < args.length; i++) {
 						message += " " + args[i];
 					}
-					byte[] messageBytes = message.getBytes();
-					try {
-						c.socket.getOutputStream().write(messageBytes, 0, messageBytes.length);
-						c.socket.getOutputStream().flush();
-					} catch (Exception ignored) {
-					}
+					c.sendMessage(message);
 					logger.sendMessage("Success. Sent message privately to client " + c.id + ".");
 					return;
 				} else {
