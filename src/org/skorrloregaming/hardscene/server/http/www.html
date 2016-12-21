@@ -1,0 +1,137 @@
+<html>
+	<head>
+		<title>HardScene</title>
+		<style>
+			body {
+		    	background: url('http://www.publicdomainpictures.net/pictures/160000/velka/abstract-wallpaper-1458764216Evj.jpg') no-repeat center center fixed; 
+		    	-webkit-background-size: cover;
+		    	-moz-background-size: cover;
+		    	-o-background-size: cover;
+		    	background-size: cover;
+		    }
+			.bottom {
+				position: fixed;
+				bottom: 0px;
+				width: 100%;
+			}
+			a {
+				text-decoration: none;
+				color: blue;
+			}
+			a:hover {
+				color: brown;
+			}
+		</style>
+		<script>
+			var socket = null;
+			var fade = function(element) {
+				var op = 1;
+				var timer = setInterval(function () {
+					if (op <= 0.1){
+						clearInterval(timer);
+						element.style.display = 'none';
+					}
+					element.style.opacity = op;
+					element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+					op -= op * 0.1;
+				}, 50);
+			}
+			var unfade = function(element) {
+			    var op = 0.1;
+			    element.style.display = 'block';
+			    var timer = setInterval(function () {
+			   		if (op >= 1){
+			    		clearInterval(timer);
+			    	}
+			    	selement.style.opacity = op;
+			    	element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+			    	op += op * 0.1;
+			    }, 10);
+			}
+			var connect = function() {
+				socket = new WebSocket('ws://' + location.host + '/websocket');
+				socket.onopen = function(event) {
+					var message = document.createElement('p');
+					message.innerHTML = 'Connected.<br/>';
+					document.getElementById('messageHistory').appendChild(message);
+					setTimeout(function() { socket.send(name + '~!' + token); }, 200);
+				};
+				socket.onmessage = function(event) {
+					var message = document.createElement('p');
+					var response = event.data;
+					message.innerHTML = event.data + '<br/>';
+					document.getElementById('messageHistory').appendChild(message);
+				};
+				socket.onclose = function(event) {
+					setTimeout(function() { window.location = window.location.href; }, 1000);
+				};
+			}
+			var load = function() {
+				if (name && token) {
+					var letterNumber = /^[0-9a-zA-Z]+$/;
+					if (name.length > 3 && name.length < 15) {
+						if (name.match(letterNumber)) {
+							document.getElementById('loginPanel').style.display = 'none';
+							document.getElementById('perform').style.visibility = 'visible';
+							connect();
+							return;
+						}
+						alert('Invalid display name syntax, please try again.');
+						return;
+					}
+					alert('Please specify a name with a length between 4 and 16.');
+				}
+			}
+			var keypress = function(event) {
+				var key = event.which || event.keyCode;
+				document.body.scrollTop = document.body.scrollHeight - document.body.clientHeight;
+				if (key == 13) {
+					var message = document.getElementById('messageBox').value;
+					if (message.length > 186) {
+						message = message.substring(0, 128);
+					}
+				   	if (message.length > 0) {
+				   		socket.send(name + ': ' + message);
+						document.getElementById('messageBox').value = '';
+				   	}
+				   	return false;
+				}
+			}
+		</script>
+	</head>
+	<body onload="load();">
+		<div id="loginPanel" name="loginPanel">
+			<div id="backdrops1" name="backdrops1"><br/><br/><br/><br/></div>
+			<center>
+			<div style="height: 400px; width: 450px; background-color: white; border-radius: 45px;" id="subLoginPanel" name="subLoginPanel">
+				<div id="backdrops2" name="backdrops2"><br/><br/><br/><br/></div>
+					<h2>HardScene-Client</h2><br/>
+					<form method="post" action="">
+					<p><input style="width: 200px; border-radius: 10px;" type="text" id="name" name="name" value="" placeholder="Display Name"></p>
+					<p><input style="width: 200px; border-radius: 10px;" type="password" id="name" name="token" value="" placeholder="Auth Token"></p>
+					<p class="submit"><input style="width: 200px; height: 30px; border-radius: 10px;" type="submit" name="commit" value="Login"></p>
+					</form>
+					<br/>
+					<p>Developed by SkorrloreGaming-Productions</p>
+			</div>
+			</center>
+		</div>
+		<div id="perform" name="perform" style="visibility: hidden;">
+			<div style="background-color: white; border-radius: 10px; padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px;" id="connection" name="connection">
+				<center style="padding-top: 15px;">
+					<a href="/">Disconnect</a> / <a href="#" onclick="document.getElementById('messageHistory').innerHTML = ''; return false;">Clear History</a>
+				</center>
+				<div id="messageHistory" name="messageHistory" style="width: 90%; padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px;">
+					<p>Connecting..</p>
+				</div>
+				<div id="controls" name="controls">
+					<center>
+						<form action="return javascript.void(0);" autocomplete="off">
+							<input style="width: 95%;" type="text" id="messageBox" name="messageBox" onkeydown="return keypress(event);">
+						</form>
+					</center>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

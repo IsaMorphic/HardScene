@@ -121,8 +121,7 @@ public class HardScene {
 			String format = message;
 			if (c.unsupportedClient)
 				format = format + '\r' + '\n';
-			c.socket.getOutputStream().write(format.getBytes());
-			c.socket.getOutputStream().flush();
+			c.sendMessage(format);
 		}
 	}
 
