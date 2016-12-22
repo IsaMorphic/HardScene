@@ -37,7 +37,7 @@ public class WebServer implements Runnable {
 	public void run() {
 		try {
 			DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-			System.out.println("WebServer: HTTP/1.1 200 OK");
+			System.out.println(HardScene.formatAddress(socket) + ": WebServer: HTTP/1.1 200 OK");
 			out.writeBytes("HTTP/1.1 200 OK\r\n");
 			out.writeBytes("Content-Type: text/html\r\n\r\n");
 			InputStream in = getClass().getResourceAsStream("www.html");
@@ -49,7 +49,11 @@ public class WebServer implements Runnable {
 							if (completeHeader[i].equals("")) {
 								String match = completeHeader[i + 1];
 								str = str + "\r\n var name = '" + match.split("=")[1].split("&")[0] + "';";
-								str = str + "\r\n var token = '" + match.split("=")[2].split("&")[0] + "';";
+								try {
+									str = str + "\r\n var token = '" + match.split("=")[2].split("&")[0] + "';";
+								} catch (Exception ig) {
+									str = str + "\r\n var token = '';";
+								}
 							}
 						}
 					}

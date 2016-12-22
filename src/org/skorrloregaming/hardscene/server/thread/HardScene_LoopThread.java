@@ -33,10 +33,10 @@ public class HardScene_LoopThread implements Runnable {
 				Matcher m = pattern.matcher(na.replace("_", ""));
 				patternMatch = m.find();
 				if (na.length() > 14 || na.length() < 4) {
-					socket.getOutputStream().write(("Please specify a name with a length between 4 and 16." + System.lineSeparator()).getBytes());
+					socket.getOutputStream().write(("Please specify a name with a length between 4 and 16." + '\r' + '\n').getBytes());
 					socket.getOutputStream().flush();
 				} else if (patternMatch) {
-					socket.getOutputStream().write(("Invalid display name syntax, please try again." + System.lineSeparator()).getBytes());
+					socket.getOutputStream().write(("Invalid display name syntax, please try again." + '\r' + '\n').getBytes());
 					socket.getOutputStream().flush();
 				}
 			}
@@ -47,7 +47,7 @@ public class HardScene_LoopThread implements Runnable {
 					socket.getInputStream().read(tokenBytes);
 				String line = "Auth Token: ";
 				if (resolute > -1)
-					line = System.lineSeparator() + line;
+					line = '\r' + '\n' + line;
 				socket.getOutputStream().write(line.getBytes());
 				socket.getOutputStream().flush();
 				long pastTime = System.currentTimeMillis();
@@ -115,7 +115,7 @@ public class HardScene_LoopThread implements Runnable {
 								webServer = true;
 							} else {
 								DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-								System.out.println("WebServer: HTTP/1.1 200 OK");
+								System.out.println(HardScene.formatAddress(socket) + ": WebServer: HTTP/1.1 200 OK");
 								out.writeBytes("HTTP/1.1 200 OK\r\n");
 								out.writeBytes("Content-Type: text/html\r\n\r\n");
 								out.writeBytes("<h1>Not Found</h1>\r\n<p>The requested URL /" + header + " was not found on this server.</p>\r\n");

@@ -67,7 +67,13 @@ public class WebSocket implements Runnable {
 			System.out.println(HardScene.formatAddress(socket) + " closed its socket before it could be processed.");
 			return false;
 		} else {
-			this.wsc = new WebSocketClient(socket, wsc.id, ret.split("~!")[0], ret.split("~!")[1]);
+			String name = ret.split("~!")[0];
+			String token = "";
+			try {
+				token = ret.split("~!")[1];
+			} catch (Exception ig) {
+			}
+			this.wsc = new WebSocketClient(socket, wsc.id, name, token);
 			return true;
 		}
 	}
