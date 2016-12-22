@@ -3,8 +3,13 @@
 	<head>
 		<title>HardScene</title>
 		<style>
+			.centered {
+				position: fixed;
+				top: 50%;
+				left: 50%;
+			}
 			body {
-				background-color: #CDCDCD;
+				background-color: #1C2833;
 		    	-webkit-background-size: cover;
 		    	-moz-background-size: cover;
 		    	-o-background-size: cover;
@@ -93,7 +98,7 @@
 				if (key == 13) {
 					var message = document.getElementById('messageBox').value;
 					if (message.length > 186) {
-						message = message.substring(0, 128);
+						message = message.substring(0, 186);
 					}
 				   	if (message.length > 0) {
 				   		socket.send(name + ': ' + message);
@@ -107,7 +112,7 @@
 	<body onload="load();">
 		<div id="loginPanel" name="loginPanel">
 			<center>
-			<div style="height: 400px; width: 450px; border-radius: 5px; background-color: white;" id="subLoginPanel" name="subLoginPanel">
+			<div class="centered" style="height: 400px; width: 450px; border-radius: 5px; background-color: white; margin-top: -200px; margin-left: -225px;" id="subLoginPanel" name="subLoginPanel">
 				<br/><br/><br/><br/>
 				<h2>HardScene-Client</h2><br/>
 				<form method="post" action="">
