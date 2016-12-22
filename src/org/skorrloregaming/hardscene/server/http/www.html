@@ -60,7 +60,9 @@
 				socket.onmessage = function(event) {
 					var isNearBottom = false;
 					if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 100) isNearBottom = true;
-					document.getElementById('messageHistory').innerHTML = document.getElementById('messageHistory').innerHTML + '<pre>' + event.data + '</pre>';
+					var message = document.createElement('pre');
+					message.innerHTML = event.data;
+					document.getElementById('messageHistory').appendChild(message);
 					if (isNearBottom) document.body.scrollTop = document.body.scrollHeight - document.body.clientHeight;
 				};
 				socket.onclose = function(event) {
