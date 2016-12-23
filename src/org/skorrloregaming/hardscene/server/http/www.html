@@ -3,13 +3,25 @@
 	<head>
 		<title>HardScene</title>
 		<style>
+			pre {
+				white-space: pre-wrap;
+				white-space: -moz-pre-wrap;
+				white-space: -pre-wrap;
+				white-space: -o-pre-wrap;
+				word-wrap: break-word;
+			}
 			.centered {
 				position: fixed;
 				top: 50%;
 				left: 50%;
 			}
+			iframe {
+				width: 750px;
+				height: 450px;
+				border: 1px solid black;
+			}
 			body {
-				background-color: #1C2833;
+				background-color: white;
 		    	-webkit-background-size: cover;
 		    	-moz-background-size: cover;
 		    	-o-background-size: cover;
@@ -97,8 +109,8 @@
 				document.body.scrollTop = document.body.scrollHeight - document.body.clientHeight;
 				if (key == 13) {
 					var message = document.getElementById('messageBox').value;
-					if (message.length > 186) {
-						message = message.substring(0, 186);
+					if (message.length > 256) {
+						message = message.substring(0, 256);
 					}
 				   	if (message.length > 0) {
 				   		socket.send(name + ': ' + message);
@@ -113,7 +125,7 @@
 		<div id="loginPanel" name="loginPanel">
 			<center>
 			<div class="centered" style="height: 400px; width: 450px; border-radius: 5px; background-color: white; margin-top: -200px; margin-left: -225px;" id="subLoginPanel" name="subLoginPanel">
-				<br/><br/><br/><br/>
+				<br/><br/>
 				<h2>HardScene-Client</h2><br/>
 				<form method="post" action="">
 				<p><input style="width: 200px; border-radius: 5px;" type="text" id="name" name="name" value="" placeholder="Display Name"></p>
@@ -130,7 +142,7 @@
 				<center style="padding-top: 15px;">
 					<a href="/">Disconnect</a> / <a href="#" onclick="document.getElementById('messageHistory').innerHTML = ''; return false;">Clear History</a>
 				</center>
-				<div id="messageHistory" name="messageHistory" style="width: 90%; padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px;">
+				<div id="messageHistory" name="messageHistory" style="width: 100%; padding-left: 10px; word-wrap: normal; overflow: hidden; padding-right: 10px; padding-top: 5px; padding-bottom: 5px;">
 					<pre>Connecting..</pre>
 				</div>
 				<div id="controls" name="controls">
