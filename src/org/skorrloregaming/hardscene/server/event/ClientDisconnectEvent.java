@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.skorrloregaming.hardscene.server.HardScene;
 import org.skorrloregaming.hardscene.server.interfaces.Client;
+import org.skorrloregaming.hardscene.server.interfaces.Logger;
 
 public class ClientDisconnectEvent {
 
@@ -17,12 +18,12 @@ public class ClientDisconnectEvent {
 		} catch (Exception ignored) {
 		}
 		if (!direct) {
-			System.out.println(client.address + " has quit the server.");
+			Logger.info(client.address + " has quit the server.");
 			if (HardScene.clients.containsKey(client.id)) {
 				HardScene.clients.remove(client.id);
 			}
 			String message = client.name + " has quit the server.";
-			System.out.println(message);
+			Logger.info(message);
 			HardScene.broadcast(message);
 		}
 	}

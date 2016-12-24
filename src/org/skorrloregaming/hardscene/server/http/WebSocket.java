@@ -10,31 +10,35 @@ import javax.xml.bind.DatatypeConverter;
 import org.skorrloregaming.hardscene.server.HardScene;
 import org.skorrloregaming.hardscene.server.event.ClientDisconnectEvent;
 import org.skorrloregaming.hardscene.server.interfaces.Client;
+import org.skorrloregaming.hardscene.server.interfaces.Logger;
 
 @SuppressWarnings("unused")
 public class WebSocket implements Runnable {
 
 	private Socket socket;
 
-	private final String[] completeHeader;
-	private final String header;
+	private final String[] header;
+	private final String infoHeader;
 	private final String type;
 	private final String resource;
 	private WebSocketClient wsc;
 
-	public WebSocket(Socket socket, String[] completeHeader, Integer id) {
+	private int lastMessageSecond = 0;
+	private int spamStrike = 0;
+
+	public WebSocket(Socket socket, String[] header, Integer id) {
 		this.socket = socket;
-		this.completeHeader = completeHeader;
-		this.header = completeHeader[0];
-		this.type = header.split("/")[0].replace(" ", "").toLowerCase();
-		this.resource = "/" + header.split("/")[1].replace(" HTTP", "").toLowerCase();
+		this.header = header;
+		this.infoHeader = header[0];
+		this.type = infoHeader.split("/")[0].replace(" ", "").toLowerCase();
+		this.resource = "/" + infoHeader.split("/")[1].replace(" HTTP", "").toLowerCase();
 		this.wsc = new WebSocketClient(socket, id);
 	}
 
 	public WebSocketClient getWebSocketClient() {
 		return this.wsc;
 	}
-	
+
 	public Client getClientAlternative() {
 		return new Client(socket, wsc.id, wsc.name, wsc.token, false, true);
 	}
@@ -46,13 +50,13 @@ public class WebSocket implements Runnable {
 			out.writeBytes("Upgrade: websocket\r\n");
 			out.writeBytes("Connection: Upgrade\r\n");
 			String key = "";
-			for (String str : completeHeader) {
+			for (String str : header) {
 				if (str.split(":")[0].equals("Sec-WebSocket-Key")) {
 					key = str.split(":")[1].replaceFirst(" ", "");
 				}
 			}
 			String value = "Sec-WebSocket-Accept: " + DatatypeConverter.printBase64Binary(MessageDigest.getInstance("SHA-1").digest((key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11").getBytes("UTF-8")));
-			System.out.println("WebSocket: " + value);
+			Logger.info("WebSocket (" + HardScene.formatAddress(socket) + "): " + value);
 			out.writeBytes(value + "\r\n\r\n");
 			out.flush();
 			return true;
@@ -64,7 +68,7 @@ public class WebSocket implements Runnable {
 	public boolean readLogin() {
 		String ret = wsc.readMessage();
 		if (ret.equals("null") || ret.equals("-1")) {
-			System.out.println(HardScene.formatAddress(socket) + " closed its socket before it could be processed.");
+			Logger.info(HardScene.formatAddress(socket) + " closed its socket before it could be processed.");
 			return false;
 		} else {
 			String name = ret.split("~!")[0];
@@ -96,8 +100,18 @@ public class WebSocket implements Runnable {
 								break;
 							if (rawMessage.equals("null") || rawMessage.equals("-1"))
 								break;
-							System.out.println(HardScene.formatAddress(socket) + " (" + wsc.id + "): " + rawMessage);
-							HardScene.broadcast(rawMessage);
+							if (lastMessageSecond == (int) (System.currentTimeMillis() / 500)) {
+								spamStrike++;
+								if (spamStrike >= 2) {
+									wsc.sendMessage("You are not allowed to spam in the server chat.");
+									socket.close();
+								}
+							} else {
+								lastMessageSecond = (int) (System.currentTimeMillis() / 500);
+								spamStrike = 0;
+								Logger.info(HardScene.formatAddress(socket) + " (" + wsc.id + "): " + rawMessage);
+								HardScene.broadcast(rawMessage);
+							}
 						}
 						socket.close();
 					} catch (IOException e) {

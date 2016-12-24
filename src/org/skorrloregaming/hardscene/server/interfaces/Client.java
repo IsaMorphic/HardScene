@@ -18,6 +18,7 @@ public class Client {
 	public Client(Socket socket, Integer id, String name, String token, boolean unsupportedClient, boolean webBased) {
 		this.socket = socket;
 		this.address = socket.getRemoteSocketAddress().toString().split(":")[0].replace("/", "");
+		if (this.address.equals("0")) this.address = "127.0.0.1";
 		this.id = id;
 		this.name = name;
 		this.token = token;

@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.skorrloregaming.hardscene.server.HardScene;
 import org.skorrloregaming.hardscene.server.interfaces.Client;
+import org.skorrloregaming.hardscene.server.interfaces.Logger;
 
 public class ClientConnectEvent {
 
@@ -17,9 +18,9 @@ public class ClientConnectEvent {
 				HardScene.clients.put(client.id, client);
 			}
 		}
-		System.out.println(client.address + " has joined the server.");
+		Logger.info(client.address + " has joined the server.");
 		String message = client.name + " has joined the server.";
-		System.out.println(message);
+		Logger.info(message);
 		HardScene.broadcast(message);
 	}
 

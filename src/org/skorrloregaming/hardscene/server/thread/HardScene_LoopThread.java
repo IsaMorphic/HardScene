@@ -13,6 +13,7 @@ import org.skorrloregaming.hardscene.server.event.ClientConnectEvent;
 import org.skorrloregaming.hardscene.server.http.WebServer;
 import org.skorrloregaming.hardscene.server.http.WebSocket;
 import org.skorrloregaming.hardscene.server.interfaces.Client;
+import org.skorrloregaming.hardscene.server.interfaces.Logger;
 
 public class HardScene_LoopThread implements Runnable {
 
@@ -21,8 +22,9 @@ public class HardScene_LoopThread implements Runnable {
 			Thread.sleep(350);
 			String na = "na";
 			boolean patternMatch = false;
-			while (na.length() > 14 || na.length() < 4 || patternMatch) {
-				if (socket.getInputStream().available() > 0) return "na";
+			while (na.length() > 16 || na.length() < 3 || patternMatch) {
+				if (socket.getInputStream().available() > 0)
+					return "na";
 				socket.getOutputStream().write("Display Name: ".getBytes());
 				socket.getOutputStream().flush();
 				byte[] nameBytes = new byte[24];
@@ -33,7 +35,7 @@ public class HardScene_LoopThread implements Runnable {
 				Matcher m = pattern.matcher(na.replace("_", ""));
 				patternMatch = m.find();
 				if (na.length() > 14 || na.length() < 4) {
-					socket.getOutputStream().write(("Please specify a name with a length between 4 and 16." + '\r' + '\n').getBytes());
+					socket.getOutputStream().write(("Please specify a name with a length between 3 and 16." + '\r' + '\n').getBytes());
 					socket.getOutputStream().flush();
 				} else if (patternMatch) {
 					socket.getOutputStream().write(("Invalid display name syntax, please try again." + '\r' + '\n').getBytes());
@@ -92,7 +94,7 @@ public class HardScene_LoopThread implements Runnable {
 			if (na.equals("na")) {
 				try {
 					if (socket.getInputStream().read(messageBytes) == -1) {
-						System.out.println(HardScene.formatAddress(socket) + " closed its socket before it could be processed.");
+						Logger.info(HardScene.formatAddress(socket) + " closed its socket before it could be processed.");
 					} else {
 						name = new String(messageBytes, StandardCharsets.UTF_8).trim();
 						String res = name.split("\\r?\\n")[0];
@@ -103,7 +105,7 @@ public class HardScene_LoopThread implements Runnable {
 								ws.bind();
 								Thread.sleep(500);
 								if (!ws.readLogin()) {
-									System.out.println(HardScene.formatAddress(socket) + " closed its socket before it could be processed.");
+									Logger.info(HardScene.formatAddress(socket) + " closed its socket before it could be processed.");
 									webServer = true;
 								} else {
 									name = ws.getWebSocketClient().name + "~!" + ws.getWebSocketClient().token;
@@ -111,11 +113,11 @@ public class HardScene_LoopThread implements Runnable {
 									webClient = true;
 								}
 							} else if (header.equals("")) {
-								new WebServer(socket, name.split("\\r?\\n"));
+								new WebServer(socket, name.split("\\r?\\n")).bind();
 								webServer = true;
 							} else {
 								DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-								System.out.println(HardScene.formatAddress(socket) + ": WebServer: HTTP/1.1 200 OK");
+								Logger.info("WebServer (" + HardScene.formatAddress(socket) + "): " + name.split("\\r?\\n")[0]);
 								out.writeBytes("HTTP/1.1 200 OK\r\n");
 								out.writeBytes("Content-Type: text/html\r\n\r\n");
 								out.writeBytes("<h1>Not Found</h1>\r\n<p>The requested URL /" + header + " was not found on this server.</p>\r\n");
@@ -127,7 +129,7 @@ public class HardScene_LoopThread implements Runnable {
 						}
 					}
 				} catch (Exception e) {
-					System.out.println(HardScene.formatAddress(socket) + " closed its socket before it could be processed.");
+					Logger.info(HardScene.formatAddress(socket) + " closed its socket before it could be processed.");
 				}
 			}
 			if (!webServer && name.length() < 100 && !name.equals("na")) {
@@ -140,12 +142,20 @@ public class HardScene_LoopThread implements Runnable {
 					}
 					Client client = new Client(socket, clientID, name.trim().split("~!")[0], token, unsupportedClient, webClient);
 					if (HardScene.clients.size() > HardScene.config.maxClients) {
-						System.out.println(client.address + " has been denied access to connect due to the max clients threshold.");
+						Logger.info(client.address + " has been denied access to connect due to the max clients threshold.");
 						client.closeTunnel();
 					} else if (HardScene.bannedManager.propertyExists(client.address)) {
-						System.out.println(client.address + " has been denied access to connect due to being banned.");
+						Logger.info(client.address + " has been denied access to connect due to being banned.");
 						client.closeTunnel();
 					} else {
+						if (!HardScene.config.allowSameNameClients) {
+							for (Client c : HardScene.clients.values()) {
+								if (c.name.equals(client.name)) {
+									c.sendMessage("Connection aborted, as you logged in from another location.");
+									c.closeTunnel();
+								}
+							}
+						}
 						try {
 							new ClientConnectEvent(client);
 						} catch (IOException e) {

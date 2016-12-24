@@ -61,6 +61,16 @@
 			    	op += op * 0.1;
 			    }, 10);
 			}
+			function linkify(inputText) {
+				var output, regex1, regex2, regex3;
+				regex1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+				output = inputText.replace(regex1, '<a href="$1" target="_blank">$1</a>');
+				regex2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+				output = output.replace(regex2, '$1<a href="http://$2" target="_blank">$2</a>');
+				regex3 = /(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
+				output = output.replace(regex3, '<a href="mailto:$1">$1</a>');
+				return output;
+			}
 			var connect = function() {
 				socket = new WebSocket('ws://' + location.host + '/websocket');
 				socket.onopen = function(event) {
@@ -73,7 +83,8 @@
 					var isNearBottom = false;
 					if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 100) isNearBottom = true;
 					var message = document.createElement('pre');
-					message.innerHTML = event.data;
+					var rex = /(<([^>]+)>)/ig;
+					message.innerHTML = linkify(event.data.replace(rex, ""));
 					document.getElementById('messageHistory').appendChild(message);
 					if (isNearBottom) document.body.scrollTop = document.body.scrollHeight - document.body.clientHeight;
 				};
@@ -84,7 +95,7 @@
 			var load = function() {
 				if (typeof name !== 'undefined' && typeof token !== 'undefined') {
 					var letterNumber = /^[0-9a-zA-Z]+$/;
-					if (name.length > 3 && name.length < 15) {
+					if (name.length > 2 && name.length < 17) {
 						if (name.split("_").join("").match(letterNumber)) {
 							document.body.style.backgroundColor = "white";
 							document.body.style.margin = '0';
@@ -102,6 +113,10 @@
 			var keypress = function(event) {
 				var key = event.which || event.keyCode;
 				document.body.scrollTop = document.body.scrollHeight - document.body.clientHeight;
+				if (key == 27) {
+					document.getElementById('messageBox').value = '';
+					return false;
+				}
 				if (key == 13) {
 					var message = document.getElementById('messageBox').value;
 					if (message.length > 256) {

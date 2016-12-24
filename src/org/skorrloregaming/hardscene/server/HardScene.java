@@ -16,6 +16,7 @@ import org.skorrloregaming.hardscene.server.config.LocalizationManager;
 import org.skorrloregaming.hardscene.server.event.CommandProcessEvent;
 import org.skorrloregaming.hardscene.server.interfaces.Client;
 import org.skorrloregaming.hardscene.server.interfaces.LegacyCommandSender;
+import org.skorrloregaming.hardscene.server.interfaces.Logger;
 import org.skorrloregaming.hardscene.server.thread.HardScene_LoopThread;
 
 public class HardScene {
@@ -25,15 +26,10 @@ public class HardScene {
 	public static boolean running = false;
 	public static ServerSocket server = null;
 	public static ConfigurationManager config = null;
-	public static boolean insecure = false;
 
 	public static LocalizationManager bannedManager = null;
 
-	public static String frameName = "HardScene";
-
 	public static HardScene instance = null;
-
-	public static boolean legacy = true;
 
 	public static void main(String[] args) {
 		instance = new HardScene();
@@ -46,7 +42,10 @@ public class HardScene {
 	}
 
 	public static String formatAddress(Socket socket) {
-		return socket.getRemoteSocketAddress().toString().split(":")[0].replace("/", "");
+		String addr = socket.getRemoteSocketAddress().toString().split(":")[0].replace("/", "");
+		if (addr.equals("0"))
+			addr = "127.0.0.1";
+		return addr;
 	}
 
 	public boolean startServer() {
@@ -59,18 +58,18 @@ public class HardScene {
 			e1.printStackTrace();
 			System.exit(-1);
 		}
-		System.out.println("Starting bind on port " + config.port + "..");
+		Logger.info("Starting bind on port " + config.port + "..");
 		try {
 			server = new ServerSocket(config.port);
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("Failed to bind HardScene to port " + config.port + ".");
+			Logger.info("Failed to bind HardScene to port " + config.port + ".");
 			running = false;
 			return false;
 		}
 		Thread acceptIncomingConnections = new Thread(new HardScene_LoopThread());
 		acceptIncomingConnections.start();
-		System.out.println("Server started, waiting for incoming connections..");
+		Logger.info("Server started, waiting for incoming connections..");
 		Scanner scanner = new Scanner(System.in);
 		while (running) {
 			System.out.print("> ");
