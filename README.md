@@ -4,15 +4,15 @@ A free server frame implementation designed to work with HardScene-Client.
 # Commands
 
 01. help - Displays a listing equal or close to this copy
-02. ban <ip> - Attemps to ban the IP from the server
-03. pardon <ip> - Attempts to remove the IP from banned clients
-04. kick <id> - Attemps to kick the specified client from the server
+02. ban (ip) - Attemps to ban the IP from the server
+03. pardon (ip) - Attempts to remove the IP from banned clients
+04. kick (id) - Attemps to kick the specified client from the server
 05. check - Attempts to check if the server is running or not
 06. toggle - Attempts to toggle the online state of the server
 07. reload - Attempts to reload the legacy configuration file
 08. list [/a] - Attemps to list the connected clients on the server
-09. tell <id> <msg> - Sends a message to the specified client
-10. broadcast <msg> - Broadcasts a message to the server
+09. tell (id) (msg) - Sends a message to the specified client
+10. broadcast (msg) - Broadcasts a message to the server
 
 # Notes for running HardScene for Bukkit
 
