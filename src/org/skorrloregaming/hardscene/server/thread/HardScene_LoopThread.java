@@ -141,15 +141,12 @@ public class HardScene_LoopThread implements Runnable {
 					} catch (Exception ig) {
 					}
 					Client client = new Client(socket, clientID, name.trim().split("~!")[0], token, unsupportedClient, webClient);
-					if (HardScene.clients.size() > HardScene.config.maxClients) {
-						Logger.info(client.address + " has been denied access to connect due to the max clients threshold.");
-						client.closeTunnel();
-					} else if (HardScene.bannedManager.propertyExists(client.address)) {
+					if (HardScene.bannedManager.propertyExists(client.address)) {
 						Logger.info(client.address + " has been denied access to connect due to being banned.");
 						client.closeTunnel();
 					} else {
 						if (!HardScene.config.allowSameNameClients) {
-							for (Client c : HardScene.clients.values()) {
+							for (Client c : HardScene.instance.clients.values()) {
 								if (c.name.equals(client.name)) {
 									c.sendMessage("Connection aborted, as you logged in from another location.");
 									c.closeTunnel();

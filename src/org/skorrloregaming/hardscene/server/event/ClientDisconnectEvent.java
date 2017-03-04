@@ -19,8 +19,8 @@ public class ClientDisconnectEvent {
 		}
 		if (!direct) {
 			Logger.info(client.address + " has quit the server.");
-			if (HardScene.clients.containsKey(client.id)) {
-				HardScene.clients.remove(client.id);
+			if (HardScene.instance.clients.containsKey(client.id)) {
+				HardScene.instance.clients.remove(client.id);
 			}
 			String message = client.name + " has quit the server.";
 			Logger.info(message);

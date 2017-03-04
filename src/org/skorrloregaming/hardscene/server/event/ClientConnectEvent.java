@@ -14,8 +14,8 @@ public class ClientConnectEvent {
 
 	public ClientConnectEvent(Client client, boolean direct) throws IOException {
 		if (!direct) {
-			if (!HardScene.clients.containsKey(client.id)) {
-				HardScene.clients.put(client.id, client);
+			if (!HardScene.instance.clients.containsKey(client.id)) {
+				HardScene.instance.clients.put(client.id, client);
 			}
 		}
 		Logger.info(client.address + " has joined the server.");

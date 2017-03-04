@@ -21,7 +21,7 @@ import org.skorrloregaming.hardscene.server.thread.HardScene_LoopThread;
 
 public class HardScene {
 
-	public static ConcurrentMap<Integer, Client> clients = new ConcurrentHashMap<>();
+	public ConcurrentMap<Integer, Client> clients = new ConcurrentHashMap<>();
 
 	public static boolean running = false;
 	public static ServerSocket server = null;
@@ -116,7 +116,7 @@ public class HardScene {
 
 	public static void broadcast(String message) throws IOException {
 		log(message);
-		for (Client c : clients.values()) {
+		for (Client c : instance.clients.values()) {
 			String format = message;
 			if (c.unsupportedClient)
 				format = format + '\r' + '\n';

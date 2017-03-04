@@ -15,7 +15,7 @@ public class CommandProcessEvent {
 				if (args.length >= 2) {
 					String address = args[1];
 					boolean result = HardScene.bannedManager.addProperty(address);
-					for (Client c : HardScene.clients.values()) {
+					for (Client c : HardScene.instance.clients.values()) {
 						String clientAddress = c.address.split(":")[0];
 						if (clientAddress.equals(address)) {
 							c.closeTunnel();
@@ -61,10 +61,10 @@ public class CommandProcessEvent {
 						HardScene.server.close();
 						HardScene.running = false;
 						logger.sendMessage("Terminating child threads..");
-						for (Client c : HardScene.clients.values()) {
+						for (Client c : HardScene.instance.clients.values()) {
 							c.closeTunnel();
 						}
-						HardScene.clients.clear();
+						HardScene.instance.clients.clear();
 					} catch (Exception ignored) {
 					}
 					logger.sendMessage("Success.");
@@ -80,11 +80,11 @@ public class CommandProcessEvent {
 				}
 			} else if (args[0].equalsIgnoreCase("kick")) {
 				if (args.length >= 2) {
-					if (!HardScene.clients.containsKey(Integer.parseInt(args[1]))) {
+					if (!HardScene.instance.clients.containsKey(Integer.parseInt(args[1]))) {
 						logger.sendMessage("Failed. Could not find a client with the ID:" + args[1] + ".");
 						return;
 					}
-					Client c = HardScene.clients.get(Integer.parseInt(args[1]));
+					Client c = HardScene.instance.clients.get(Integer.parseInt(args[1]));
 					logger.sendMessage("Kicking the specified client from the server..");
 					try {
 						c.closeTunnel();
@@ -109,11 +109,11 @@ public class CommandProcessEvent {
 				}
 			} else if (args[0].equalsIgnoreCase("tell")) {
 				if (args.length >= 3) {
-					if (!HardScene.clients.containsKey(Integer.parseInt(args[1]))) {
+					if (!HardScene.instance.clients.containsKey(Integer.parseInt(args[1]))) {
 						logger.sendMessage("Could not find a client with the ID:" + args[1] + ".");
 						return;
 					}
-					Client c = HardScene.clients.get(Integer.parseInt(args[1]));
+					Client c = HardScene.instance.clients.get(Integer.parseInt(args[1]));
 					String message = logger.getName() + " says..";
 					for (int i = 2; i < args.length; i++) {
 						message += " " + args[i];
@@ -128,7 +128,7 @@ public class CommandProcessEvent {
 				if (args.length >= 2) {
 					if (args[1].equalsIgnoreCase("/a")) {
 						logger.sendMessage("Listing current clients in complete mode..");
-						for (Client c : HardScene.clients.values()) {
+						for (Client c : HardScene.instance.clients.values()) {
 							logger.sendMessage(c.address.toString() + " / " + c.id + " / " + c.name);
 						}
 						return;
@@ -138,7 +138,7 @@ public class CommandProcessEvent {
 					}
 				}
 				logger.sendMessage("Listing current clients in safe mode..");
-				for (Client c : HardScene.clients.values()) {
+				for (Client c : HardScene.instance.clients.values()) {
 					logger.sendMessage("0.0.0.0 / " + c.id + " / " + c.name);
 				}
 			} else {

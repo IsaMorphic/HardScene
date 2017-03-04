@@ -11,7 +11,6 @@ import org.skorrloregaming.hardscene.server.interfaces.Logger;
 public class ConfigurationManager {
 
 	public int port = 28894;
-	public int maxClients = 50;
 	public boolean log = true;
 	public boolean allowSameNameClients = false;
 
@@ -22,7 +21,6 @@ public class ConfigurationManager {
 			try (FileReader reader = new FileReader(file)) {
 				p.load(reader);
 				port = Integer.parseInt(p.getProperty("port"));
-				maxClients = Integer.parseInt(p.getProperty("maxClients"));
 				log = Boolean.parseBoolean(p.getProperty("log"));
 				allowSameNameClients = Boolean.parseBoolean(p.getProperty("allowSameNameClients"));
 			}
@@ -36,7 +34,6 @@ public class ConfigurationManager {
 				System.exit(-1);
 			}
 			writer.println("port=28894");
-			writer.println("maxClients=50");
 			writer.println("log=true");
 			writer.println("allowSameNameClients=false");
 			writer.close();

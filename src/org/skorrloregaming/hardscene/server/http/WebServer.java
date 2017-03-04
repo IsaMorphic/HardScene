@@ -27,7 +27,7 @@ public class WebServer implements Runnable {
 		this.type = infoHeader.split("/")[0].replace(" ", "").toLowerCase();
 		this.resource = "/" + infoHeader.split("/")[1].replace(" HTTP", "").toLowerCase();
 	}
-	
+
 	public void bind() {
 		Thread thread = new Thread(this);
 		thread.start();
@@ -42,9 +42,12 @@ public class WebServer implements Runnable {
 			out.writeBytes("Content-Type: text/html\r\n\r\n");
 			InputStream in = getClass().getResourceAsStream("www.html");
 			try (BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
-			    String str;
-			    while ((str = br.readLine()) != null) {
-			    	if (str.contains("<script>") && type.equals("post")) {
+				String str;
+				while ((str = br.readLine()) != null) {
+					if (str.contains("Auth Token")) {
+						str = "<p><input style=\"width: 200px; border-radius: 5px;\" type=\"password\" id=\"name\" name=\"token\" value=\"\" placeholder=\"Auth Token\" disabled></p>";
+					}
+					if (str.contains("<script>") && type.equals("post")) {
 						for (int i = 0; i < header.length; i++) {
 							if (header[i].equals("")) {
 								String match = header[i + 1];
@@ -61,7 +64,7 @@ public class WebServer implements Runnable {
 						out.writeBytes(str + "\r\n");
 					} catch (IOException e) {
 					}
-			    }
+				}
 			}
 			out.flush();
 			socket.close();
