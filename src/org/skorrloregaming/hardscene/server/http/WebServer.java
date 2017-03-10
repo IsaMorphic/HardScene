@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.zip.ZipException;
 
 import org.skorrloregaming.hardscene.server.HardScene;
 import org.skorrloregaming.hardscene.server.interfaces.Logger;
@@ -27,7 +28,7 @@ public class WebServer implements Runnable {
 		this.type = infoHeader.split("/")[0].replace(" ", "").toLowerCase();
 		this.resource = "/" + infoHeader.split("/")[1].replace(" HTTP", "").toLowerCase();
 	}
-
+	
 	public void bind() {
 		Thread thread = new Thread(this);
 		thread.start();
@@ -42,12 +43,12 @@ public class WebServer implements Runnable {
 			out.writeBytes("Content-Type: text/html\r\n\r\n");
 			InputStream in = getClass().getResourceAsStream("www.html");
 			try (BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
-				String str;
-				while ((str = br.readLine()) != null) {
-					if (str.contains("Auth Token")) {
+			    String str;
+			    while ((str = br.readLine()) != null) {
+			    	if (str.contains("Auth Token")) {
 						str = "<p><input style=\"width: 200px; border-radius: 5px;\" type=\"password\" id=\"name\" name=\"token\" value=\"\" placeholder=\"Auth Token\" disabled></p>";
 					}
-					if (str.contains("<script>") && type.equals("post")) {
+			    	if (str.contains("<script>") && type.equals("post")) {
 						for (int i = 0; i < header.length; i++) {
 							if (header[i].equals("")) {
 								String match = header[i + 1];
@@ -64,12 +65,19 @@ public class WebServer implements Runnable {
 						out.writeBytes(str + "\r\n");
 					} catch (IOException e) {
 					}
-				}
+			    }
+			} catch (ZipException e) {
+				Logger.info("Failed to retrieve default website template, possible memory leak ?");
+				out.writeBytes("Failed to retrieve default website template, possible memory leak ?");
 			}
 			out.flush();
 			socket.close();
 		} catch (Exception e) {
 			Logger.info(HardScene.formatAddress(socket) + " closed its socket before it could be processed.");
+			try {
+				socket.close();
+			} catch (IOException e1) {
+			}
 		}
 	}
 
