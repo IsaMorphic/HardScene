@@ -5,11 +5,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
 
 import org.skorrloregaming.hardscene.server.config.ConfigurationManager;
 import org.skorrloregaming.hardscene.server.config.LocalizationManager;
@@ -31,7 +36,38 @@ public class HardScene {
 
 	public static HardScene instance = null;
 
+	public static Date getLastCompilationTime() {
+		Date d = null;
+		Class<?> currentClass = new Object() {
+		}.getClass().getEnclosingClass();
+		URL resource = currentClass.getResource(currentClass.getSimpleName() + ".class");
+		if (resource != null) {
+			if (resource.getProtocol().equals("file")) {
+				try {
+					d = new Date(new File(resource.toURI()).lastModified());
+				} catch (URISyntaxException ignored) {
+				}
+			} else if (resource.getProtocol().equals("jar")) {
+				String path = resource.getPath();
+				d = new Date(new File(path.substring(5, path.indexOf("!"))).lastModified());
+			} else if (resource.getProtocol().equals("zip")) {
+				String path = resource.getPath();
+				File jarFileOnDisk = new File(path.substring(0, path.indexOf("!")));
+				try (JarFile jf = new JarFile(jarFileOnDisk)) {
+					ZipEntry ze = jf.getEntry(path.substring(path.indexOf("!") + 2));
+					long zeTimeLong = ze.getTime();
+					Date zeTimeDate = new Date(zeTimeLong);
+					d = zeTimeDate;
+				} catch (IOException | RuntimeException ignored) {
+				}
+			}
+		}
+		return d;
+	}
+
 	public static void main(String[] args) {
+		DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+		System.out.println("Last compilation time: " + df.format(getLastCompilationTime()));
 		instance = new HardScene();
 		instance.onEnable();
 	}
