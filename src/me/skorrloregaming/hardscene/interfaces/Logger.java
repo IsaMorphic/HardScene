@@ -1,4 +1,4 @@
-package org.skorrloregaming.hardscene.server.interfaces;
+package me.skorrloregaming.hardscene.interfaces;
 
 public class Logger {
 	

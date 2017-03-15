@@ -1,4 +1,4 @@
-package org.skorrloregaming.hardscene.server.config;
+package me.skorrloregaming.hardscene.config;
 
 import java.io.BufferedWriter;
 import java.io.File;

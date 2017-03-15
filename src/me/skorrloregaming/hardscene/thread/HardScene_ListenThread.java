@@ -1,11 +1,11 @@
-package org.skorrloregaming.hardscene.server.thread;
+package me.skorrloregaming.hardscene.thread;
 
 import java.nio.charset.StandardCharsets;
 
-import org.skorrloregaming.hardscene.server.HardScene;
-import org.skorrloregaming.hardscene.server.event.ClientDisconnectEvent;
-import org.skorrloregaming.hardscene.server.interfaces.Client;
-import org.skorrloregaming.hardscene.server.interfaces.Logger;
+import me.skorrloregaming.hardscene.HardScene;
+import me.skorrloregaming.hardscene.event.ClientDisconnectEvent;
+import me.skorrloregaming.hardscene.interfaces.Client;
+import me.skorrloregaming.hardscene.interfaces.Logger;
 
 public class HardScene_ListenThread implements Runnable {
 

@@ -1,9 +1,9 @@
-package org.skorrloregaming.hardscene.server.interfaces;
+package me.skorrloregaming.hardscene.interfaces;
 
 import java.io.IOException;
 import java.net.Socket;
 
-import org.skorrloregaming.hardscene.server.http.WebSocketClient;
+import me.skorrloregaming.hardscene.http.WebSocketClient;
 
 public class Client {
 

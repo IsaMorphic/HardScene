@@ -1,9 +1,9 @@
-package org.skorrloregaming.hardscene.server.event;
+package me.skorrloregaming.hardscene.event;
 
-import org.skorrloregaming.hardscene.server.HardScene;
-import org.skorrloregaming.hardscene.server.config.ConfigurationManager;
-import org.skorrloregaming.hardscene.server.interfaces.Client;
-import org.skorrloregaming.hardscene.server.interfaces.LegacyCommandSender;
+import me.skorrloregaming.hardscene.HardScene;
+import me.skorrloregaming.hardscene.config.ConfigurationManager;
+import me.skorrloregaming.hardscene.interfaces.Client;
+import me.skorrloregaming.hardscene.interfaces.LegacyCommandSender;
 
 public class CommandProcessEvent {
 

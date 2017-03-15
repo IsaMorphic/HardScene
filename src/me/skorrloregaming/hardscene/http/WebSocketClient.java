@@ -1,4 +1,4 @@
-package org.skorrloregaming.hardscene.server.http;
+package me.skorrloregaming.hardscene.http;
 
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;

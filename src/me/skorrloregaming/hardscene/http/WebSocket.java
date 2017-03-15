@@ -1,4 +1,4 @@
-package org.skorrloregaming.hardscene.server.http;
+package me.skorrloregaming.hardscene.http;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -7,10 +7,10 @@ import java.security.MessageDigest;
 
 import javax.xml.bind.DatatypeConverter;
 
-import org.skorrloregaming.hardscene.server.HardScene;
-import org.skorrloregaming.hardscene.server.event.ClientDisconnectEvent;
-import org.skorrloregaming.hardscene.server.interfaces.Client;
-import org.skorrloregaming.hardscene.server.interfaces.Logger;
+import me.skorrloregaming.hardscene.HardScene;
+import me.skorrloregaming.hardscene.event.ClientDisconnectEvent;
+import me.skorrloregaming.hardscene.interfaces.Client;
+import me.skorrloregaming.hardscene.interfaces.Logger;
 
 @SuppressWarnings("unused")
 public class WebSocket implements Runnable {

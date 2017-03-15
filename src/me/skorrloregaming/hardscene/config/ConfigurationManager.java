@@ -1,4 +1,4 @@
-package org.skorrloregaming.hardscene.server.config;
+package me.skorrloregaming.hardscene.config;
 
 import java.io.File;
 import java.io.FileReader;
@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Properties;
 
-import org.skorrloregaming.hardscene.server.interfaces.Logger;
+import me.skorrloregaming.hardscene.interfaces.Logger;
 
 public class ConfigurationManager {
 

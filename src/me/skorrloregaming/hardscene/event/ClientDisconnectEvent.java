@@ -1,10 +1,10 @@
-package org.skorrloregaming.hardscene.server.event;
+package me.skorrloregaming.hardscene.event;
 
 import java.io.IOException;
 
-import org.skorrloregaming.hardscene.server.HardScene;
-import org.skorrloregaming.hardscene.server.interfaces.Client;
-import org.skorrloregaming.hardscene.server.interfaces.Logger;
+import me.skorrloregaming.hardscene.HardScene;
+import me.skorrloregaming.hardscene.interfaces.Client;
+import me.skorrloregaming.hardscene.interfaces.Logger;
 
 public class ClientDisconnectEvent {
 

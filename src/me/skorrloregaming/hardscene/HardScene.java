@@ -1,4 +1,4 @@
-package org.skorrloregaming.hardscene.server;
+package me.skorrloregaming.hardscene;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -16,13 +16,13 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
-import org.skorrloregaming.hardscene.server.config.ConfigurationManager;
-import org.skorrloregaming.hardscene.server.config.LocalizationManager;
-import org.skorrloregaming.hardscene.server.event.CommandProcessEvent;
-import org.skorrloregaming.hardscene.server.interfaces.Client;
-import org.skorrloregaming.hardscene.server.interfaces.LegacyCommandSender;
-import org.skorrloregaming.hardscene.server.interfaces.Logger;
-import org.skorrloregaming.hardscene.server.thread.HardScene_LoopThread;
+import me.skorrloregaming.hardscene.config.ConfigurationManager;
+import me.skorrloregaming.hardscene.config.LocalizationManager;
+import me.skorrloregaming.hardscene.event.CommandProcessEvent;
+import me.skorrloregaming.hardscene.interfaces.Client;
+import me.skorrloregaming.hardscene.interfaces.LegacyCommandSender;
+import me.skorrloregaming.hardscene.interfaces.Logger;
+import me.skorrloregaming.hardscene.thread.HardScene_LoopThread;
 
 public class HardScene {
 

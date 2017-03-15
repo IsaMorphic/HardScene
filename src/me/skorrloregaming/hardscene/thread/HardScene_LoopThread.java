@@ -1,4 +1,4 @@
-package org.skorrloregaming.hardscene.server.thread;
+package me.skorrloregaming.hardscene.thread;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -8,12 +8,12 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.skorrloregaming.hardscene.server.HardScene;
-import org.skorrloregaming.hardscene.server.event.ClientConnectEvent;
-import org.skorrloregaming.hardscene.server.http.WebServer;
-import org.skorrloregaming.hardscene.server.http.WebSocket;
-import org.skorrloregaming.hardscene.server.interfaces.Client;
-import org.skorrloregaming.hardscene.server.interfaces.Logger;
+import me.skorrloregaming.hardscene.HardScene;
+import me.skorrloregaming.hardscene.event.ClientConnectEvent;
+import me.skorrloregaming.hardscene.http.WebServer;
+import me.skorrloregaming.hardscene.http.WebSocket;
+import me.skorrloregaming.hardscene.interfaces.Client;
+import me.skorrloregaming.hardscene.interfaces.Logger;
 
 public class HardScene_LoopThread implements Runnable {
 
