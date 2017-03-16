@@ -34,7 +34,7 @@ public class HardScene_LoopThread implements Runnable {
 				Pattern pattern = Pattern.compile("[^a-z0-9]", Pattern.CASE_INSENSITIVE);
 				Matcher m = pattern.matcher(na.replace("_", ""));
 				patternMatch = m.find();
-				if (na.length() > 14 || na.length() < 4) {
+				if (na.length() > 16 || na.length() < 3) {
 					socket.getOutputStream().write(("Please specify a name with a length between 3 and 16." + '\r' + '\n').getBytes());
 					socket.getOutputStream().flush();
 				} else if (patternMatch) {
@@ -90,11 +90,12 @@ public class HardScene_LoopThread implements Runnable {
 			String name = na;
 			boolean webClient = false;
 			boolean webServer = false;
-			Integer clientID = ran.nextInt(900) + 100;
+			int clientID = ran.nextInt(900) + 100;
 			if (na.equals("na")) {
 				try {
 					if (socket.getInputStream().read(messageBytes) == -1) {
 						Logger.info(HardScene.formatAddress(socket) + " closed its socket before it could be processed.");
+						socket.close();
 					} else {
 						name = new String(messageBytes, StandardCharsets.UTF_8).trim();
 						String res = name.split("\\r?\\n")[0];
@@ -130,6 +131,10 @@ public class HardScene_LoopThread implements Runnable {
 					}
 				} catch (Exception e) {
 					Logger.info(HardScene.formatAddress(socket) + " closed its socket before it could be processed.");
+					try {
+						socket.close();
+					} catch (Exception ig) {
+					}
 				}
 			}
 			if (!webServer && name.length() < 100 && !name.equals("na")) {

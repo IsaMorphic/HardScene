@@ -54,7 +54,7 @@ public class CommandProcessEvent {
 					new CommandProcessEvent("toggle ".split(" "), logger);
 				}
 				logger.sendMessage("Success. Legacy configuration file reloaded.");
-			} else if (args[0].equalsIgnoreCase("toggle")) {
+			} else if (args[0].equalsIgnoreCase("toggle") || args[0].equalsIgnoreCase("stop")) {
 				if (HardScene.running) {
 					logger.sendMessage("Terminating server socket..");
 					try {
@@ -160,7 +160,7 @@ public class CommandProcessEvent {
 		logger.sendMessage("" + preCommandSyntax + "kick <id> - Kick client.");
 		logger.sendMessage("" + preCommandSyntax + "check - Check state of server.");
 		logger.sendMessage("" + preCommandSyntax + "reload - Reload server config.");
-		logger.sendMessage("" + preCommandSyntax + "toggle - Toggle server state.");
+		logger.sendMessage("" + preCommandSyntax + "stop - Shutdown the server.");
 		logger.sendMessage("" + preCommandSyntax + "list [/a] - List clients.");
 		logger.sendMessage("" + preCommandSyntax + "tell <id> <msg> - Message client.");
 		logger.sendMessage("" + preCommandSyntax + "broadcast <msg> - Broadcast message.");

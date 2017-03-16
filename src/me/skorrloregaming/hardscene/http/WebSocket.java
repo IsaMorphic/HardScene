@@ -90,47 +90,36 @@ public class WebSocket implements Runnable {
 	@Override
 	public void run() {
 		try {
-			Runnable run1 = new Runnable() {
-				@Override
-				public void run() {
-					try {
-						while (HardScene.running) {
-							String rawMessage = wsc.readMessage();
-							if (rawMessage.length() == 2)
-								break;
-							if (rawMessage.equals("null") || rawMessage.equals("-1"))
-								break;
-							if (lastMessageSecond == (int) (System.currentTimeMillis() / 500)) {
-								spamStrike++;
-								if (spamStrike >= 2) {
-									wsc.sendMessage("You are not allowed to spam in the server chat.");
-									socket.close();
-								}
-							} else {
-								lastMessageSecond = (int) (System.currentTimeMillis() / 500);
-								spamStrike = 0;
-								Logger.info(HardScene.formatAddress(socket) + " (" + wsc.id + "): " + rawMessage);
-								HardScene.broadcast(rawMessage);
-							}
-						}
+			while (HardScene.running) {
+				String rawMessage = wsc.readMessage();
+				if (rawMessage.length() == 2)
+					break;
+				if (rawMessage.equals("null") || rawMessage.equals("-1"))
+					break;
+				if (lastMessageSecond == (int) (System.currentTimeMillis() / 500)) {
+					spamStrike++;
+					if (spamStrike >= 2) {
+						wsc.sendMessage("You are not allowed to spam in the server chat.");
 						socket.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-						try {
-							socket.close();
-						} catch (IOException e1) {
-							e1.printStackTrace();
-						}
 					}
-					try {
-						new ClientDisconnectEvent(getClientAlternative());
-					} catch (Exception ignored) {
-					}
+				} else {
+					lastMessageSecond = (int) (System.currentTimeMillis() / 500);
+					spamStrike = 0;
+					Logger.info(HardScene.formatAddress(socket) + " (" + wsc.id + "): " + rawMessage);
+					HardScene.broadcast(rawMessage);
 				}
-			};
-			Thread thread1 = new Thread(run1);
-			thread1.start();
-		} catch (Exception e) {
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			socket.close();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		try {
+			new ClientDisconnectEvent(getClientAlternative());
+		} catch (Exception ignored) {
 		}
 	}
 }
