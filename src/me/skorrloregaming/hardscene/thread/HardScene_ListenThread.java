@@ -40,7 +40,7 @@ public class HardScene_ListenThread implements Runnable {
 					if (returnValue != 0 && rawMessage.length() != 0) {
 						Logger.info(client.address.toString() + " (" + client.id + "): " + message);
 						message = HardScene.config.messageFormat.replace("{client}", client.name).replace("{message}", message);
-						message = message.replace("รง","ง");
+						message = message.replace("ร","");
 						HardScene.broadcast(message);
 					}
 				}
