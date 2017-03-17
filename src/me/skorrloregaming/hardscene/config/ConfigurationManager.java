@@ -13,6 +13,7 @@ public class ConfigurationManager {
 	public int port = 28894;
 	public boolean log = true;
 	public boolean allowSameNameClients = false;
+	public String messageFormat = "{client}: {message}";
 
 	public ConfigurationManager() throws IOException {
 		if (System.getenv("development") != null)
@@ -25,6 +26,7 @@ public class ConfigurationManager {
 				port = Integer.parseInt(p.getProperty("port"));
 				log = Boolean.parseBoolean(p.getProperty("log"));
 				allowSameNameClients = Boolean.parseBoolean(p.getProperty("allowSameNameClients"));
+				messageFormat = String.valueOf(p.getProperty("messageFormat"));
 			}
 		} else {
 			PrintWriter writer = null;
@@ -35,9 +37,10 @@ public class ConfigurationManager {
 				Logger.info("Failed. An internal error has occured whilist creating server config.");
 				System.exit(-1);
 			}
-			writer.println("port=28894");
-			writer.println("log=true");
-			writer.println("allowSameNameClients=false");
+			writer.println("port=" + port);
+			writer.println("log=" + log);
+			writer.println("allowSameNameClients=" + allowSameNameClients);
+			writer.println("messageFormat=" + messageFormat);
 			writer.close();
 		}
 	}

@@ -39,7 +39,7 @@ public class HardScene_ListenThread implements Runnable {
 					spamStrike = 0;
 					if (returnValue != 0 && rawMessage.length() != 0) {
 						Logger.info(client.address.toString() + " (" + client.id + "): " + message);
-						message = client.name + ": " + message;
+						message = HardScene.config.messageFormat.replace("{client}", client.name).replace("{message}", message);
 						HardScene.broadcast(message);
 					}
 				}

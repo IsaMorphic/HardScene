@@ -107,7 +107,7 @@ public class WebSocket implements Runnable {
 					lastMessageSecond = (int) (System.currentTimeMillis() / 500);
 					spamStrike = 0;
 					Logger.info(HardScene.formatAddress(socket) + " (" + wsc.id + "): " + rawMessage);
-					rawMessage = wsc.name + ": " + rawMessage;
+					rawMessage = HardScene.config.messageFormat.replace("{client}", wsc.name).replace("{message}", rawMessage);
 					HardScene.broadcast(rawMessage);
 				}
 			}
