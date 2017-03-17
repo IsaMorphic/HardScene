@@ -52,6 +52,8 @@ public class CommandProcessEvent {
 				if (HardScene.running) {
 					new CommandProcessEvent("toggle ".split(" "), logger);
 					new CommandProcessEvent("toggle ".split(" "), logger);
+				} else {
+					new CommandProcessEvent("toggle ".split(" "), logger);
 				}
 				logger.sendMessage("Success. Legacy configuration file reloaded.");
 			} else if (args[0].equalsIgnoreCase("toggle") || args[0].equalsIgnoreCase("stop")) {

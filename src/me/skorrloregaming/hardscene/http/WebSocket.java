@@ -109,7 +109,7 @@ public class WebSocket implements Runnable {
 					spamStrike = 0;
 					Logger.info(HardScene.formatAddress(socket) + " (" + wsc.id + "): " + rawMessage);
 					rawMessage = HardScene.config.messageFormat.replace("{client}", wsc.name).replace("{message}", rawMessage);
-					rawMessage = rawMessage.replace("ร","");
+					rawMessage = rawMessage.replace("รง","ง");
 					HardScene.broadcast(rawMessage);
 				}
 			}
