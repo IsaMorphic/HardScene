@@ -1,6 +1,7 @@
 package me.skorrloregaming.hardscene.http;
 
 import java.net.Socket;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 public class WebSocketClient {
@@ -51,7 +52,7 @@ public class WebSocketClient {
 			for (i = rDataStart, j = 0; i < len; i++, j++) {
 				message[j] = (byte) (b[i] ^ masks[j % 4]);
 			}
-			return new String(message, StandardCharsets.ISO_8859_1);	
+			return new String(message, StandardCharsets.UTF_8);
 		} catch (Exception ex) {
 			return "null";
 		}
@@ -60,7 +61,7 @@ public class WebSocketClient {
 	public boolean sendMessage(String msg) {
 		try {
 			byte[] response;
-			byte[] bytesRaw = msg.getBytes();
+			byte[] bytesRaw = msg.getBytes(Charset.forName("UTF-8"));
 			byte[] frame = new byte[10];
 			int indexStartRawData = -1;
 			int length = bytesRaw.length;

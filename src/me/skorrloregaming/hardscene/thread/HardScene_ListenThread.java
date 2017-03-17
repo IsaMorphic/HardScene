@@ -37,11 +37,9 @@ public class HardScene_ListenThread implements Runnable {
 				} else {
 					lastMessageSecond = (int) (System.currentTimeMillis() / 500);
 					spamStrike = 0;
-					if (client.unsupportedClient) {
-						message = client.name + ": " + message;
-					}
 					if (returnValue != 0 && rawMessage.length() != 0) {
 						Logger.info(client.address.toString() + " (" + client.id + "): " + message);
+						message = client.name + ": " + message;
 						HardScene.broadcast(message);
 					}
 				}

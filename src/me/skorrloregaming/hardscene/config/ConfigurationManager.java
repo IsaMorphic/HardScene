@@ -15,6 +15,8 @@ public class ConfigurationManager {
 	public boolean allowSameNameClients = false;
 
 	public ConfigurationManager() throws IOException {
+		if (System.getenv("development") != null)
+			return;
 		File file = new File("hardscene.properties");
 		Properties p = new Properties();
 		if (file.exists()) {

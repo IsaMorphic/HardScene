@@ -123,7 +123,7 @@
 						message = message.substring(0, 256);
 					}
 				   	if (message.length > 0) {
-				   		socket.send(name + ': ' + message);
+				   		socket.send(message);
 						document.getElementById('messageBox').value = '';
 				   	}
 				   	return false;

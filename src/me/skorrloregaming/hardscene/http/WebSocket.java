@@ -4,6 +4,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.security.MessageDigest;
+import java.util.Arrays;
 
 import javax.xml.bind.DatatypeConverter;
 
@@ -92,7 +93,7 @@ public class WebSocket implements Runnable {
 		try {
 			while (HardScene.running) {
 				String rawMessage = wsc.readMessage();
-				if (rawMessage.length() == 2)
+				if (rawMessage.length() == 2 && rawMessage.getBytes()[0] == 3 && rawMessage.getBytes()[1] == 63)
 					break;
 				if (rawMessage.equals("null") || rawMessage.equals("-1"))
 					break;
@@ -106,6 +107,7 @@ public class WebSocket implements Runnable {
 					lastMessageSecond = (int) (System.currentTimeMillis() / 500);
 					spamStrike = 0;
 					Logger.info(HardScene.formatAddress(socket) + " (" + wsc.id + "): " + rawMessage);
+					rawMessage = wsc.name + ": " + rawMessage;
 					HardScene.broadcast(rawMessage);
 				}
 			}
