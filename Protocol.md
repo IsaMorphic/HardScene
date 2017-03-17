@@ -24,6 +24,4 @@ Packet data charset: UTF-8
 
 Example packet data: "Hello World"
 
-Example IRC packet data "Player321: Hello World"
-
 1. Client message = Packet data
