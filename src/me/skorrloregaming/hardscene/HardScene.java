@@ -35,6 +35,8 @@ public class HardScene {
 	public static LocalizationManager bannedManager = null;
 
 	public static HardScene instance = null;
+	
+	public static File configFile = null;
 
 	public static Date getLastCompilationTime() {
 		Date d = null;
@@ -66,6 +68,7 @@ public class HardScene {
 	}
 
 	public static void main(String[] args) {
+		configFile = new File("hardscene.properties");
 		DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 		System.out.println("Last compilation time: " + df.format(getLastCompilationTime()));
 		instance = new HardScene();
@@ -89,7 +92,7 @@ public class HardScene {
 			return false;
 		running = true;
 		try {
-			config = new ConfigurationManager();
+			config = new ConfigurationManager(HardScene.configFile);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 			System.exit(-1);
@@ -134,7 +137,7 @@ public class HardScene {
 	}
 
 	public static void log(String message) {
-		if (config.log) {
+		if (config.log && !config.development) {
 			try {
 				String time = "[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "]";
 				String logMessage = '\n' + time + " " + trim(message);

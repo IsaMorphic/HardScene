@@ -15,10 +15,13 @@ public class ConfigurationManager {
 	public boolean allowSameNameClients = false;
 	public String messageFormat = "{client}: {message}";
 
-	public ConfigurationManager() throws IOException {
-		if (System.getenv("development") != null)
+	public boolean development = false;
+
+	public ConfigurationManager(File file) throws IOException {
+		if (System.getenv("development") != null) {
+			development = true;
 			return;
-		File file = new File("hardscene.properties");
+		}
 		Properties p = new Properties();
 		if (file.exists()) {
 			try (FileReader reader = new FileReader(file)) {

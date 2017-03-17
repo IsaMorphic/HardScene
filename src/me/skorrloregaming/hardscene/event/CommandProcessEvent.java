@@ -48,7 +48,7 @@ public class CommandProcessEvent {
 					logger.sendMessage("The server socket is not properly running.");
 				}
 			} else if (args[0].equalsIgnoreCase("reload")) {
-				HardScene.config = new ConfigurationManager();
+				HardScene.config = new ConfigurationManager(HardScene.configFile);
 				if (HardScene.running) {
 					new CommandProcessEvent("toggle ".split(" "), logger);
 					new CommandProcessEvent("toggle ".split(" "), logger);
