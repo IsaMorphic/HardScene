@@ -127,19 +127,23 @@ public class WebSocket implements Runnable {
 				} else {
 					rawMessage.replace("§", "");
 				}
-				if (lastMessageSecond == (int) (System.currentTimeMillis() / 500)) {
-					spamStrike++;
-					if (spamStrike >= 2) {
-						wsc.sendMessage("You are not allowed to spam in the server chat.");
-						socket.close();
-					}
+				if (rawMessage.startsWith("/") && HardScene.config.doRequireInfo) {
+					HardScene_AuthThread.handleCommand(getClientAlternative(), rawMessage);
 				} else {
-					lastMessageSecond = (int) (System.currentTimeMillis() / 500);
-					spamStrike = 0;
-					Logger.info(HardScene.formatAddress(socket) + " (" + wsc.id + "): " + wsc.name + ": " + rawMessage);
-					rawMessage = HardScene.config.messageFormat.replace("{client}", wsc.name).replace("{message}", rawMessage);
-					rawMessage = rawMessage.replace("Â", "");
-					HardScene.broadcast(rawMessage);
+					if (lastMessageSecond == (int) (System.currentTimeMillis() / 500)) {
+						spamStrike++;
+						if (spamStrike >= 2) {
+							wsc.sendMessage("You are not allowed to spam in the server chat.");
+							socket.close();
+						}
+					} else {
+						lastMessageSecond = (int) (System.currentTimeMillis() / 500);
+						spamStrike = 0;
+						Logger.info(HardScene.formatAddress(socket) + " (" + wsc.id + "): " + wsc.name + ": " + rawMessage);
+						rawMessage = HardScene.config.messageFormat.replace("{client}", wsc.name).replace("{message}", rawMessage);
+						rawMessage = rawMessage.replace("Â", "");
+						HardScene.broadcast(rawMessage);
+					}	
 				}
 			}
 		} catch (IOException e) {

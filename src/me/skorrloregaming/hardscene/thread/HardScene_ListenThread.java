@@ -59,20 +59,24 @@ public class HardScene_ListenThread implements Runnable {
 				} else {
 					message.replace("§", "");
 				}
-				if (lastMessageSecond == (int) (System.currentTimeMillis() / 500)) {
-					spamStrike++;
-					if (spamStrike >= 2) {
-						client.sendMessage("You are not allowed to spam in the server chat.");
-						client.closeTunnel();
-					}
+				if (message.startsWith("/") && HardScene.config.doRequireInfo) {
+					HardScene_AuthThread.handleCommand(client, message);
 				} else {
-					lastMessageSecond = (int) (System.currentTimeMillis() / 500);
-					spamStrike = 0;
-					if (returnValue != 0 && rawMessage.length() != 0) {
-						Logger.info(client.address.toString() + " (" + client.id + "): " + client.name + ": " + message);
-						message = HardScene.config.messageFormat.replace("{client}", client.name).replace("{message}", message);
-						message = message.replace("Â", "");
-						HardScene.broadcast(message);
+					if (lastMessageSecond == (int) (System.currentTimeMillis() / 500)) {
+						spamStrike++;
+						if (spamStrike >= 2) {
+							client.sendMessage("You are not allowed to spam in the server chat.");
+							client.closeTunnel();
+						}
+					} else {
+						lastMessageSecond = (int) (System.currentTimeMillis() / 500);
+						spamStrike = 0;
+						if (returnValue != 0 && rawMessage.length() != 0) {
+							Logger.info(client.address.toString() + " (" + client.id + "): " + client.name + ": " + message);
+							message = HardScene.config.messageFormat.replace("{client}", client.name).replace("{message}", message);
+							message = message.replace("Â", "");
+							HardScene.broadcast(message);
+						}
 					}
 				}
 			} catch (Exception e) {

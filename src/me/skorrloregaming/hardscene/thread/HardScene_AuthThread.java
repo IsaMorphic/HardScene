@@ -20,7 +20,7 @@ public class HardScene_AuthThread implements Runnable {
 		this.client = client;
 	}
 
-	public boolean checkPassword(Client client, String password) {
+	public static boolean checkPassword(Client client, String password) {
 		if (HardScene.authManager.propertyExists(client.name)) {
 			String correctPassword = HardScene.authManager.getProperty(client.name);
 			if (password.equals(correctPassword)) {
@@ -29,6 +29,54 @@ public class HardScene_AuthThread implements Runnable {
 				return false;
 			}
 		} else {
+			return false;
+		}
+	}
+
+	public static boolean handleCommand(Client client, String message) {
+		String[] args = new String[0];
+		if (message.contains(" ")) args = message.substring(message.indexOf(" ")).split(" ");
+		String label = message.split(" ")[0];
+		if (message.startsWith("/changepassword") || message.startsWith("/cp")) {
+			if (args.length < 2) {
+				client.sendMessage("Syntax: " + label + " (currentPassword) (newPassword)");
+			} else {
+				String currentPassword = args[1];
+				String newPassword = args[2];
+				if (checkPassword(client, currentPassword)) {
+					if (newPassword.length() < 4 || newPassword.length() > 16) {
+						client.sendMessage("You must specify a password with a length between 4 and 16." + '\r' + '\n');
+					} else {
+						HardScene.authManager.removeProperty(client.name);
+						HardScene.authManager.addProperty(client.name, newPassword);
+						client.sendMessage("You have successfully changed your existing password." + '\r' + '\n');
+					}
+				} else {
+					client.sendMessage("The specified password is incorrect for this account, please try again." + '\r' + '\n');
+				}
+			}
+			return true;
+		} else if (message.startsWith("/unregister") || message.startsWith("/unreg")) {
+			if (args.length == 0) {
+				client.sendMessage("Syntax: " + label + " (currentPassword)");
+			} else {
+				String currentPassword = args[1];
+				if (checkPassword(client, currentPassword)) {
+					HardScene.authManager.removeProperty(client.name);
+					client.sendMessage("You have successfully unregistered your self from the server." + '\r' + '\n');
+					client.closeTunnel();
+				} else {
+					client.sendMessage("The specified password is incorrect for this account, please try again." + '\r' + '\n');
+				}
+			}
+			return true;
+		} else if (message.startsWith("/help")) {
+			client.sendMessage("HardScene - Authentication system command dictionary" + '\r' + '\n');
+			client.sendMessage("1. /changepassword -> Change your existing account password" + '\r' + '\n');
+			client.sendMessage("2. /unregister -> Unregister your account from the server" + '\r' + '\n');
+			return true;
+		} else {
+			client.sendMessage("The specified command was not recognized as a valid command." + '\r' + '\n');
 			return false;
 		}
 	}
@@ -61,7 +109,7 @@ public class HardScene_AuthThread implements Runnable {
 				loginLoopThread.start();
 				byte[] messageBytes = new byte[512];
 				String message = "0";
-				while (!isComplete && (message.charAt(0) != '/' || message.split(" ").length < 2 || !checkPassword(client, message.split(" ")[1]))) {
+				while (!isComplete && (!message.startsWith("/login") || message.split(" ").length < 2 || !checkPassword(client, message.split(" ")[1]))) {
 					messageBytes = new byte[512];
 					client.sendMessage("Please log into your account using /login (password)" + '\r' + '\n');
 					if (client.webBased) {
@@ -114,7 +162,7 @@ public class HardScene_AuthThread implements Runnable {
 				registerLoopThread.start();
 				byte[] messageBytes = new byte[512];
 				String message = "0";
-				while (!isComplete && (message.charAt(0) != '/' || message.split(" ").length < 3 || !message.split(" ")[1].equals(message.split(" ")[2])) || (message.split(" ")[1].length() < 4 || message.split(" ")[1].length() > 16)) {
+				while (!isComplete && (!message.startsWith("/register") || message.split(" ").length < 3 || !message.split(" ")[1].equals(message.split(" ")[2])) || (message.split(" ")[1].length() < 4 || message.split(" ")[1].length() > 16)) {
 					messageBytes = new byte[512];
 					client.sendMessage("Please register your account using /register (password) (password)" + '\r' + '\n');
 					if (client.webBased) {
