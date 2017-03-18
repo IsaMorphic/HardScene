@@ -14,6 +14,8 @@ public class ConfigurationManager {
 	public boolean log = true;
 	public boolean allowSameNameClients = false;
 	public String messageFormat = "{client}: {message}";
+	public boolean colorCodes = true;
+	public boolean doRequireInfo = true;
 
 	public boolean development = false;
 
@@ -30,6 +32,8 @@ public class ConfigurationManager {
 				log = Boolean.parseBoolean(p.getProperty("log"));
 				allowSameNameClients = Boolean.parseBoolean(p.getProperty("allowSameNameClients"));
 				messageFormat = String.valueOf(p.getProperty("messageFormat"));
+				colorCodes = Boolean.parseBoolean(p.getProperty("colorCodes"));
+				doRequireInfo = Boolean.parseBoolean(p.getProperty("doRequireInfo"));
 			}
 		} else {
 			PrintWriter writer = null;
@@ -42,8 +46,10 @@ public class ConfigurationManager {
 			}
 			writer.println("port=" + port);
 			writer.println("log=" + log);
+			writer.println("doRequireInfo=" + doRequireInfo);
 			writer.println("allowSameNameClients=" + allowSameNameClients);
 			writer.println("messageFormat=" + messageFormat);
+			writer.println("colorCodes=" + colorCodes);
 			writer.close();
 		}
 	}

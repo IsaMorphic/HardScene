@@ -3,9 +3,7 @@ package me.skorrloregaming.hardscene.http;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.nio.charset.Charset;
 import java.security.MessageDigest;
-import java.util.Arrays;
 
 import javax.xml.bind.DatatypeConverter;
 
@@ -13,6 +11,7 @@ import me.skorrloregaming.hardscene.HardScene;
 import me.skorrloregaming.hardscene.event.ClientDisconnectEvent;
 import me.skorrloregaming.hardscene.interfaces.Client;
 import me.skorrloregaming.hardscene.interfaces.Logger;
+import me.skorrloregaming.hardscene.thread.HardScene_AuthThread;
 
 @SuppressWarnings("unused")
 public class WebSocket implements Runnable {
@@ -91,6 +90,29 @@ public class WebSocket implements Runnable {
 
 	@Override
 	public void run() {
+		// START: Authentication system (3.17.2017)
+		HardScene_AuthThread authThread = new HardScene_AuthThread(getClientAlternative());
+		Thread authThreadObj = new Thread(authThread);
+		authThreadObj.start();
+		while (!authThread.isComplete) {
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		if (authThread.incomplete) {
+			try {
+				socket.close();
+			} catch (IOException e1) {
+			}
+			try {
+				new ClientDisconnectEvent(getClientAlternative());
+			} catch (Exception ignored) {
+			}
+			return;
+		}
+		// END: Authentication system (3.17.2017)
 		try {
 			while (HardScene.running) {
 				String rawMessage = wsc.readMessage();
@@ -98,6 +120,11 @@ public class WebSocket implements Runnable {
 					break;
 				if (rawMessage.equals("null") || rawMessage.equals("-1"))
 					break;
+				if (HardScene.config.colorCodes) {
+					rawMessage = rawMessage.replace("&", "§");
+				} else {
+					rawMessage.replace("§", "");
+				}
 				if (lastMessageSecond == (int) (System.currentTimeMillis() / 500)) {
 					spamStrike++;
 					if (spamStrike >= 2) {

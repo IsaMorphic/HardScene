@@ -254,7 +254,7 @@
 					var isNearBottom = false;
 					if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 100) isNearBottom = true;
 					var rex = /(<([^>]+)>)/ig;
-					var result = mineParse(event.data.replace(rex, ""));
+					var result = mineParse(linkify(event.data.replace(rex, "")));
                     document.getElementById('messageHistory').appendChild(result.parsed);
 					if (isNearBottom) document.body.scrollTop = document.body.scrollHeight - document.body.clientHeight;
 				};

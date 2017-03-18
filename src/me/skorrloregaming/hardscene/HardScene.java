@@ -17,6 +17,7 @@ import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
 import me.skorrloregaming.hardscene.config.ConfigurationManager;
+import me.skorrloregaming.hardscene.config.PropertyManager;
 import me.skorrloregaming.hardscene.config.LocalizationManager;
 import me.skorrloregaming.hardscene.event.CommandProcessEvent;
 import me.skorrloregaming.hardscene.interfaces.Client;
@@ -33,6 +34,7 @@ public class HardScene {
 	public static ConfigurationManager config = null;
 
 	public static LocalizationManager bannedManager = null;
+	public static PropertyManager authManager = null;
 
 	public static HardScene instance = null;
 	
@@ -76,6 +78,7 @@ public class HardScene {
 	}
 
 	public void onEnable() {
+		authManager = new PropertyManager(new File("hardscene_auth.properties"));
 		bannedManager = new LocalizationManager(new File("hardscene_banned.properties"));
 		startServer();
 	}
