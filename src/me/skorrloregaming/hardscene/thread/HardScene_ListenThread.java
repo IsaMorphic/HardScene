@@ -22,26 +22,28 @@ public class HardScene_ListenThread implements Runnable {
 	@Override
 	public void run() {
 		// START: Authentication system (3.17.2017)
-		HardScene_AuthThread authThread = new HardScene_AuthThread(client);
-		Thread authThreadObj = new Thread(authThread);
-		authThreadObj.start();
-		while (!authThread.isComplete) {
-			try {
-				Thread.sleep(50);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+		if (HardScene.config.doRequireInfo) {
+			HardScene_AuthThread authThread = new HardScene_AuthThread(client);
+			Thread authThreadObj = new Thread(authThread);
+			authThreadObj.start();
+			while (!authThread.isComplete) {
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
-		}
-		if (authThread.incomplete) {
-			try {
-				client.socket.close();
-			} catch (IOException e1) {
+			if (authThread.incomplete) {
+				try {
+					client.socket.close();
+				} catch (IOException e1) {
+				}
+				try {
+					new ClientDisconnectEvent(client);
+				} catch (Exception ignored) {
+				}
+				return;
 			}
-			try {
-				new ClientDisconnectEvent(client);
-			} catch (Exception ignored) {
-			}
-			return;
 		}
 		// END: Authentication system (3.17.2017)
 		while (HardScene.running) {
@@ -67,7 +69,7 @@ public class HardScene_ListenThread implements Runnable {
 					lastMessageSecond = (int) (System.currentTimeMillis() / 500);
 					spamStrike = 0;
 					if (returnValue != 0 && rawMessage.length() != 0) {
-						Logger.info(client.address.toString() + " (" + client.id + "): " + message);
+						Logger.info(client.address.toString() + " (" + client.id + "): " + client.name + ": " + message);
 						message = HardScene.config.messageFormat.replace("{client}", client.name).replace("{message}", message);
 						message = message.replace("Â", "");
 						HardScene.broadcast(message);

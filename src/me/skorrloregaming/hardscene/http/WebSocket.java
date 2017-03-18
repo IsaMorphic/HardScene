@@ -91,26 +91,28 @@ public class WebSocket implements Runnable {
 	@Override
 	public void run() {
 		// START: Authentication system (3.17.2017)
-		HardScene_AuthThread authThread = new HardScene_AuthThread(getClientAlternative());
-		Thread authThreadObj = new Thread(authThread);
-		authThreadObj.start();
-		while (!authThread.isComplete) {
-			try {
-				Thread.sleep(50);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+		if (HardScene.config.doRequireInfo) {
+			HardScene_AuthThread authThread = new HardScene_AuthThread(getClientAlternative());
+			Thread authThreadObj = new Thread(authThread);
+			authThreadObj.start();
+			while (!authThread.isComplete) {
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
-		}
-		if (authThread.incomplete) {
-			try {
-				socket.close();
-			} catch (IOException e1) {
+			if (authThread.incomplete) {
+				try {
+					socket.close();
+				} catch (IOException e1) {
+				}
+				try {
+					new ClientDisconnectEvent(getClientAlternative());
+				} catch (Exception ignored) {
+				}
+				return;
 			}
-			try {
-				new ClientDisconnectEvent(getClientAlternative());
-			} catch (Exception ignored) {
-			}
-			return;
 		}
 		// END: Authentication system (3.17.2017)
 		try {
@@ -134,9 +136,9 @@ public class WebSocket implements Runnable {
 				} else {
 					lastMessageSecond = (int) (System.currentTimeMillis() / 500);
 					spamStrike = 0;
-					Logger.info(HardScene.formatAddress(socket) + " (" + wsc.id + "): " + rawMessage);
+					Logger.info(HardScene.formatAddress(socket) + " (" + wsc.id + "): " + wsc.name + ": " + rawMessage);
 					rawMessage = HardScene.config.messageFormat.replace("{client}", wsc.name).replace("{message}", rawMessage);
-					rawMessage = rawMessage.replace("Â","");
+					rawMessage = rawMessage.replace("Â", "");
 					HardScene.broadcast(rawMessage);
 				}
 			}
