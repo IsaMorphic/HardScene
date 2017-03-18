@@ -44,26 +44,26 @@
         obfuscators = {},
         alreadyParsed = [],
         styleMap = {
-            '§0': 'color:#000000',
-            '§1': 'color:#0000AA',
-            '§2': 'color:#00AA00',
-            '§3': 'color:#00AAAA',
-            '§4': 'color:#AA0000',
-            '§5': 'color:#AA00AA',
-            '§6': 'color:#FFAA00',
-            '§7': 'color:#AAAAAA',
-            '§8': 'color:#555555',
-            '§9': 'color:#5555FF',
-            '§a': 'color:#55FF55',
-            '§b': 'color:#55FFFF',
-            '§c': 'color:#FF5555',
-            '§d': 'color:#FF55FF',
-            '§e': 'color:#FFFF55',
-            '§f': 'color:#FFFFFF',
-            '§l': 'font-weight:bold',
-            '§m': 'text-decoration:line-through',
-            '§n': 'text-decoration:underline',
-            '§o': 'font-style:italic'
+            '\xa70': 'color:#000000',
+            '\xa71': 'color:#0000AA',
+            '\xa72': 'color:#00AA00',
+            '\xa73': 'color:#00AAAA',
+            '\xa74': 'color:#AA0000',
+            '\xa75': 'color:#AA00AA',
+            '\xa76': 'color:#FFAA00',
+            '\xa77': 'color:#AAAAAA',
+            '\xa78': 'color:#555555',
+            '\xa79': 'color:#5555FF',
+            '\xa7a': 'color:#55FF55',
+            '\xa7b': 'color:#55FFFF',
+            '\xa7c': 'color:#FF5555',
+            '\xa7d': 'color:#FF55FF',
+            '\xa7e': 'color:#FFFF55',
+            '\xa7f': 'color:#FFFFFF',
+            '\xa7l': 'font-weight:bold',
+            '\xa7m': 'text-decoration:line-through',
+            '\xa7n': 'text-decoration:underline',
+            '\xa7o': 'font-style:italic'
         };
 
     function obfuscate(elem, string) {
@@ -121,7 +121,7 @@
 
         codes.forEach(function (code) {
             elem.style.cssText += styleMap[code] + ';';
-            if (code === '§k') {
+            if (code === '\xa7k') {
                 obfuscate(elem, string);
                 obfuscated = true;
             }
@@ -134,7 +134,7 @@
 
     function parseStyle(string) {
         var finalPre = document.createElement('pre'),
-            codes = string.match(/§.{1}/g) || [],
+            codes = string.match(/\xa7.{1}/g) || [],
             codesLen = codes.length,
             indexes = [],
             indexDelta,
@@ -167,8 +167,8 @@
             } else {
                 apply.push(codes[i]);
             }
-            if (apply.lastIndexOf('§r') > -1) {
-                apply = apply.slice(apply.lastIndexOf('§r') + 1);
+            if (apply.lastIndexOf('\xa7r') > -1) {
+                apply = apply.slice(apply.lastIndexOf('\xa7r') + 1);
             }
             strSlice = string.substring(indexes[i], indexes[i + 1]);
             finalPre.appendChild(applyCode(strSlice, apply));
