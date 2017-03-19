@@ -31,7 +31,7 @@ public class ConfigurationManager {
 				port = Integer.parseInt(p.getProperty("port"));
 				log = Boolean.parseBoolean(p.getProperty("log"));
 				allowSameNameClients = Boolean.parseBoolean(p.getProperty("allowSameNameClients"));
-				messageFormat = String.valueOf(p.getProperty("messageFormat"));
+				messageFormat = String.valueOf(p.getProperty("messageFormat")).replace("&", "§");
 				colorCodes = Boolean.parseBoolean(p.getProperty("colorCodes"));
 				doRequireInfo = Boolean.parseBoolean(p.getProperty("doRequireInfo"));
 			}
