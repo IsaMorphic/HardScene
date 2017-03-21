@@ -1,6 +1,7 @@
 package me.skorrloregaming.hardscene.thread;
 
 import java.nio.charset.Charset;
+import java.util.Base64;
 
 import me.skorrloregaming.hardscene.HardScene;
 import me.skorrloregaming.hardscene.event.ClientAuthenticateEvent;
@@ -18,11 +19,15 @@ public class HardScene_AuthThread implements Runnable {
 	public HardScene_AuthThread(Client client) {
 		this.client = client;
 	}
+	
+	public static String encodePassword(String password) {
+		return Base64.getEncoder().encodeToString(password.getBytes());
+	}
 
 	public static boolean checkPassword(Client client, String password) {
 		if (HardScene.authManager.propertyExists(client.name)) {
 			String correctPassword = HardScene.authManager.getProperty(client.name);
-			if (password.equals(correctPassword)) {
+			if (encodePassword(password).replace("=", "").equals(correctPassword)) {
 				return true;
 			} else {
 				return false;
@@ -47,7 +52,7 @@ public class HardScene_AuthThread implements Runnable {
 						client.sendMessage("You must specify a password with a length between 4 and 16." + '\r' + '\n');
 					} else {
 						HardScene.authManager.removeProperty(client.name);
-						HardScene.authManager.addProperty(client.name, newPassword);
+						HardScene.authManager.addProperty(client.name, encodePassword(newPassword));
 						client.sendMessage("You have successfully changed your existing password." + '\r' + '\n');
 					}
 				} else {
@@ -189,7 +194,7 @@ public class HardScene_AuthThread implements Runnable {
 					}
 				}
 				client.sendMessage("You have successfully registered with the server." + '\r' + '\n');
-				HardScene.authManager.addProperty(client.name, message.split(" ")[1]);
+				HardScene.authManager.addProperty(client.name, encodePassword(message.split(" ")[1]).replace("=", ""));
 				isComplete = true;
 				registerLoopThread.stop();
 				new ClientAuthenticateEvent(client);
