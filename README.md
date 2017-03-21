@@ -30,16 +30,6 @@ A free server frame implementation designed to work with HardScene-Client.
 5. After that you will be asked for an auth token, this is not required by any release so far of legacy HardScene
 6. Finally, if all went well, you will then be connected to the remote irc server managed by HardScene
 
-# Connecting using PuTTY (supported)
-1. Download putty-0.67-installer.msi from https://the.earth.li/~sgtatham/putty/0.67/x86/putty-0.67-installer.msi
-2. Complete the installation of PuTTY, while configuring it to your liking
-3. Once PuTTY is ready for use, switch the protocol from SSH to Raw
-4. Type in the external IP for the remote server into the first box, and the port (28894 by default) into the other
-5. Finally let PuTTY connect to directly to the server, if unsuccessful check the firewall settings on the remote server
-6. You will then be asked for a display name, type any username you would like here
-7. After that you will be asked for an auth token, this is not required by any release so far of legacy HardScene
-8. Finally, if all went well, you will then be connected to the remote irc server managed by HardScene
-
 # Connecting using your web browser (supported)
 1. Connect to the external ip of the remote server followed by :28894 (or whatever port you specified in the config)
 1. If the page is seemingly stuck trying to load, try refreshing the page a couple times
