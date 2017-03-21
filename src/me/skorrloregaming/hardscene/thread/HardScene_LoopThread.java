@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import me.skorrloregaming.hardscene.HardScene;
 import me.skorrloregaming.hardscene.event.ClientConnectEvent;
@@ -16,53 +14,6 @@ import me.skorrloregaming.hardscene.interfaces.Client;
 import me.skorrloregaming.hardscene.interfaces.Logger;
 
 public class HardScene_LoopThread implements Runnable {
-
-	private String unsupportedAuthentication(Socket socket) {
-		try {
-			Thread.sleep(350);
-			String na = "na";
-			boolean patternMatch = false;
-			while (na.length() > 16 || na.length() < 3 || patternMatch) {
-				if (socket.getInputStream().available() > 0)
-					return "na";
-				socket.getOutputStream().write("Display Name: ".getBytes());
-				socket.getOutputStream().flush();
-				byte[] nameBytes = new byte[24];
-				socket.getInputStream().read(nameBytes);
-				na = new String(nameBytes, StandardCharsets.UTF_8).trim();
-				na = na.replace("~!", "");
-				Pattern pattern = Pattern.compile("[^a-z0-9]", Pattern.CASE_INSENSITIVE);
-				Matcher m = pattern.matcher(na.replace("_", ""));
-				patternMatch = m.find();
-				if (na.length() > 16 || na.length() < 3) {
-					socket.getOutputStream().write(("Please specify a name with a length between 3 and 16." + '\r' + '\n').getBytes());
-					socket.getOutputStream().flush();
-				} else if (patternMatch) {
-					socket.getOutputStream().write(("Invalid display name syntax, please try again." + '\r' + '\n').getBytes());
-					socket.getOutputStream().flush();
-				}
-			}
-			byte[] tokenBytes = new byte[24];
-			long resolute = -1;
-			while (resolute < 100) {
-				if (socket.getInputStream().available() > 0)
-					socket.getInputStream().read(tokenBytes);
-				String line = "Auth Token: ";
-				if (resolute > -1)
-					line = '\r' + '\n' + line;
-				socket.getOutputStream().write(line.getBytes());
-				socket.getOutputStream().flush();
-				long pastTime = System.currentTimeMillis();
-				socket.getInputStream().read(tokenBytes);
-				long newTime = System.currentTimeMillis();
-				resolute = newTime - pastTime;
-			}
-			na = na + "~!" + new String(tokenBytes, StandardCharsets.UTF_8).toString();
-			return na;
-		} catch (Exception ex) {
-			return "na";
-		}
-	}
 
 	@Override
 	public void run() {
@@ -76,15 +27,6 @@ public class HardScene_LoopThread implements Runnable {
 			// START: Unsupported client support
 			boolean unsupportedClient = false;
 			String na = "na";
-			try {
-				Thread.sleep(500);
-				if (socket.getInputStream().available() == 0) {
-					unsupportedClient = true;
-					na = unsupportedAuthentication(socket);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 			Random ran = new Random();
 			byte[] messageBytes = new byte[2048];
 			String name = na;

@@ -1,6 +1,5 @@
 package me.skorrloregaming.hardscene.thread;
 
-import java.io.IOException;
 import java.nio.charset.Charset;
 
 import me.skorrloregaming.hardscene.HardScene;
@@ -195,7 +194,7 @@ public class HardScene_AuthThread implements Runnable {
 				registerLoopThread.stop();
 				new ClientAuthenticateEvent(client);
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			incomplete = true;
 			isComplete = true;
 		}
