@@ -1,7 +1,8 @@
 package me.skorrloregaming.hardscene.thread;
 
 import java.nio.charset.Charset;
-import java.util.Base64;
+
+import javax.xml.bind.DatatypeConverter;
 
 import me.skorrloregaming.hardscene.HardScene;
 import me.skorrloregaming.hardscene.event.ClientAuthenticateEvent;
@@ -21,7 +22,7 @@ public class HardScene_AuthThread implements Runnable {
 	}
 	
 	public static String encodePassword(String password) {
-		return Base64.getEncoder().encodeToString(password.getBytes());
+		return DatatypeConverter.printBase64Binary(password.getBytes());
 	}
 
 	public static boolean checkPassword(Client client, String password) {
