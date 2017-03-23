@@ -22,7 +22,7 @@ A free server frame implementation designed to work with HardScene-Client.
 
 # How to connect to the server
 
-# Connecting using HardScene-Client (recommended)
+# Connecting using HardScene-Client (supported)
 1. Download HardScene-Client.jar from https://github.com/Speentie8081/HardScene-Client
 2. Navigate into the directory containing the file in terminal and type java -jar HardScene-Client.jar
 3. Type in the external IP for the remote server followed by :28894 (or whatever port you specified in the config)
@@ -30,7 +30,7 @@ A free server frame implementation designed to work with HardScene-Client.
 5. After that you will be asked for an auth token, this is not required by any release so far of legacy HardScene
 6. Finally, if all went well, you will then be connected to the remote irc server managed by HardScene
 
-# Connecting using your web browser (supported)
+# Connecting using your web browser (recommended)
 1. Connect to the external ip of the remote server followed by :28894 (or whatever port you specified in the config)
 1. If the page is seemingly stuck trying to load, try refreshing the page a couple times
 2. You will be then asked for a display name, type any username you would like here
