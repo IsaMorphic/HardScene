@@ -22,6 +22,7 @@ public class ConfigurationManager {
 	public ConfigurationManager(File file) throws IOException {
 		if (System.getenv("development") != null) {
 			development = true;
+			Logger.info("Notice: You are running in development mode, some features are disabled.");
 			return;
 		}
 		Properties p = new Properties();
@@ -31,7 +32,7 @@ public class ConfigurationManager {
 				port = Integer.parseInt(p.getProperty("port"));
 				log = Boolean.parseBoolean(p.getProperty("log"));
 				allowSameNameClients = Boolean.parseBoolean(p.getProperty("allowSameNameClients"));
-				messageFormat = String.valueOf(p.getProperty("messageFormat")).replace("&", "§");
+				messageFormat = String.valueOf(p.getProperty("messageFormat")).replace("&", "ï¿½");
 				colorCodes = Boolean.parseBoolean(p.getProperty("colorCodes"));
 				doRequireInfo = Boolean.parseBoolean(p.getProperty("doRequireInfo"));
 			}

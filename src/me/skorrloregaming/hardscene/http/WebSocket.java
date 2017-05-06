@@ -130,20 +130,20 @@ public class WebSocket implements Runnable {
 				if (rawMessage.startsWith("/") && HardScene.config.doRequireInfo) {
 					HardScene_AuthThread.handleCommand(getClientAlternative(), rawMessage);
 				} else {
-					if (lastMessageSecond == (int) (System.currentTimeMillis() / 500)) {
+					if (lastMessageSecond == (int) (System.currentTimeMillis() / 1000)) {
 						spamStrike++;
-						if (spamStrike >= 2) {
+						if (spamStrike >= 3) {
 							wsc.sendMessage("You are not allowed to spam in the server chat.");
 							socket.close();
 						}
 					} else {
-						lastMessageSecond = (int) (System.currentTimeMillis() / 500);
+						lastMessageSecond = (int) (System.currentTimeMillis() / 1000);
 						spamStrike = 0;
-						Logger.info(HardScene.formatAddress(socket) + " (" + wsc.id + "): " + wsc.name + ": " + rawMessage);
-						rawMessage = HardScene.config.messageFormat.replace("{client}", wsc.name).replace("{message}", rawMessage);
-						rawMessage = rawMessage.replace("Â", "");
-						HardScene.broadcast(rawMessage);
-					}	
+					}
+					Logger.info(HardScene.formatAddress(socket) + " (" + wsc.id + "): " + wsc.name + ": " + rawMessage);
+					rawMessage = HardScene.config.messageFormat.replace("{client}", wsc.name).replace("{message}", rawMessage);
+					rawMessage = rawMessage.replace("Â", "");
+					HardScene.broadcast(rawMessage);
 				}
 			}
 		} catch (IOException e) {

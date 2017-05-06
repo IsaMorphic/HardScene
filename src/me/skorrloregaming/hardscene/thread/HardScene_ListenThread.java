@@ -62,21 +62,21 @@ public class HardScene_ListenThread implements Runnable {
 				if (message.startsWith("/") && HardScene.config.doRequireInfo) {
 					HardScene_AuthThread.handleCommand(client, message);
 				} else {
-					if (lastMessageSecond == (int) (System.currentTimeMillis() / 500)) {
+					if (lastMessageSecond == (int) (System.currentTimeMillis() / 1000)) {
 						spamStrike++;
-						if (spamStrike >= 2) {
+						if (spamStrike >= 3) {
 							client.sendMessage("You are not allowed to spam in the server chat.");
 							client.closeTunnel();
 						}
 					} else {
-						lastMessageSecond = (int) (System.currentTimeMillis() / 500);
+						lastMessageSecond = (int) (System.currentTimeMillis() / 1000);
 						spamStrike = 0;
-						if (returnValue != 0 && rawMessage.length() != 0) {
-							Logger.info(client.address.toString() + " (" + client.id + "): " + client.name + ": " + message);
-							message = HardScene.config.messageFormat.replace("{client}", client.name).replace("{message}", message);
-							message = message.replace("Â", "");
-							HardScene.broadcast(message);
-						}
+					}
+					if (returnValue != 0 && rawMessage.length() != 0) {
+						Logger.info(client.address.toString() + " (" + client.id + "): " + client.name + ": " + message);
+						message = HardScene.config.messageFormat.replace("{client}", client.name).replace("{message}", message);
+						message = message.replace("Â", "");
+						HardScene.broadcast(message);
 					}
 				}
 			} catch (Exception e) {
