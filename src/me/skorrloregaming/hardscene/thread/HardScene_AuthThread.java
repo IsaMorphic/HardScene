@@ -75,10 +75,20 @@ public class HardScene_AuthThread implements Runnable {
 				}
 			}
 			return true;
+		} else if (message.startsWith("/list")) {
+			StringBuilder sb = new StringBuilder();
+			for (Client c : HardScene.instance.clients.values()) {
+				sb.append(c.name + " (" + c.id + "), ");
+			}
+			String append = sb.toString();
+			append = append.substring(0, append.lastIndexOf(", "));
+			client.sendMessage("Connected (" + HardScene.instance.clients.values().size() + "): " + append);
+			return true;
 		} else if (message.startsWith("/help")) {
-			client.sendMessage("HardScene - Authentication system command dictionary" + '\r' + '\n');
+			client.sendMessage("HardScene - User command dictionary" + '\r' + '\n');
 			client.sendMessage("1. /changepassword -> Change your existing account password" + '\r' + '\n');
 			client.sendMessage("2. /unregister -> Unregister your account from the server" + '\r' + '\n');
+			client.sendMessage("3. /list -> Shows all the people that are connected" +  + '\r' + '\n');
 			return true;
 		} else {
 			client.sendMessage("The specified command was not recognized as a valid command." + '\r' + '\n');
