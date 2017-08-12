@@ -1,5 +1,9 @@
 package me.skorrloregaming.hardscene.event;
 
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.util.Properties;
+
 import me.skorrloregaming.hardscene.HardScene;
 import me.skorrloregaming.hardscene.config.ConfigurationManager;
 import me.skorrloregaming.hardscene.interfaces.Client;
@@ -49,6 +53,27 @@ public class CommandProcessEvent {
 				}
 			} else if (args[0].equalsIgnoreCase("reload")) {
 				HardScene.config = new ConfigurationManager(HardScene.configFile);
+				if (args.length > 1 && HardScene.configFile.exists()) {
+					int port = 0;
+					try {
+						port = Integer.parseInt(args[1]);
+					} catch (Exception ex) {
+					}
+					if (port > 0 && port < 65535 && port > 1) {
+						Properties p = new Properties();
+						try (FileReader reader = new FileReader(HardScene.configFile)) {
+							p.load(reader);
+							p.setProperty("port", port + "");
+							if (HardScene.configFile.exists()) HardScene.configFile.delete();
+							FileOutputStream outputStream = new FileOutputStream(HardScene.configFile);
+							p.store(outputStream, null);
+							outputStream.close();
+						}
+						logger.sendMessage("Success. Server socket port changed.");	
+					} else {
+						logger.sendMessage("Failed. Server socket port was not changed.");
+					}
+				}
 				if (HardScene.running) {
 					new CommandProcessEvent("toggle ".split(" "), logger);
 					new CommandProcessEvent("toggle ".split(" "), logger);
@@ -161,7 +186,7 @@ public class CommandProcessEvent {
 		logger.sendMessage("" + preCommandSyntax + "pardon <ip> - Pardon client.");
 		logger.sendMessage("" + preCommandSyntax + "kick <id> - Kick client.");
 		logger.sendMessage("" + preCommandSyntax + "check - Check state of server.");
-		logger.sendMessage("" + preCommandSyntax + "reload - Reload server config.");
+		logger.sendMessage("" + preCommandSyntax + "reload <port> - Reload server config.");
 		logger.sendMessage("" + preCommandSyntax + "stop - Shutdown the server.");
 		logger.sendMessage("" + preCommandSyntax + "list [/a] - List clients.");
 		logger.sendMessage("" + preCommandSyntax + "tell <id> <msg> - Message client.");
