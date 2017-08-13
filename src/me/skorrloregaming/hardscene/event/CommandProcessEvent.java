@@ -186,7 +186,7 @@ public class CommandProcessEvent {
 		logger.sendMessage("" + preCommandSyntax + "pardon <ip> - Pardon client.");
 		logger.sendMessage("" + preCommandSyntax + "kick <id> - Kick client.");
 		logger.sendMessage("" + preCommandSyntax + "check - Check state of server.");
-		logger.sendMessage("" + preCommandSyntax + "reload <port> - Reload server config.");
+		logger.sendMessage("" + preCommandSyntax + "reload [port] - Reload server config.");
 		logger.sendMessage("" + preCommandSyntax + "stop - Shutdown the server.");
 		logger.sendMessage("" + preCommandSyntax + "list [/a] - List clients.");
 		logger.sendMessage("" + preCommandSyntax + "tell <id> <msg> - Message client.");
