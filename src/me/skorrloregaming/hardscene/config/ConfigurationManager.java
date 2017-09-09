@@ -16,6 +16,7 @@ public class ConfigurationManager {
 	public String messageFormat = "{client}: {message}";
 	public boolean colorCodes = true;
 	public boolean doRequireInfo = true;
+	public boolean translationFeatures = true;
 
 	public boolean development = false;
 
@@ -35,6 +36,7 @@ public class ConfigurationManager {
 				messageFormat = String.valueOf(p.getProperty("messageFormat")).replace("&", "§");
 				colorCodes = Boolean.parseBoolean(p.getProperty("colorCodes"));
 				doRequireInfo = Boolean.parseBoolean(p.getProperty("doRequireInfo"));
+				translationFeatures = Boolean.parseBoolean(p.getProperty("translationFeatures"));
 			}
 		} else {
 			PrintWriter writer = null;
@@ -51,6 +53,7 @@ public class ConfigurationManager {
 			writer.println("allowSameNameClients=" + allowSameNameClients);
 			writer.println("messageFormat=" + messageFormat);
 			writer.println("colorCodes=" + colorCodes);
+			writer.println("translationFeatures=" + translationFeatures);
 			writer.close();
 		}
 	}

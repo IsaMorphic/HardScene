@@ -48,6 +48,8 @@ public class WebServer implements Runnable {
 					if (str.contains("Auth Token")) {
 						str = "<p><input style=\"width: 200px; border-radius: 5px;\" type=\"password\" id=\"name\" name=\"token\" value=\"\" placeholder=\"Auth Token\" disabled></p>";
 					}
+					if (!HardScene.config.translationFeatures && str.contains("runTranslationFeatures(rawMessage);"))
+						continue;
 					if (str.contains("<script>") && type.equals("post")) {
 						for (int i = 0; i < header.length; i++) {
 							if (header[i].equals("")) {
