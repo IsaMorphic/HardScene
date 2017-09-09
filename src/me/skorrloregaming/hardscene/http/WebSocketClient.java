@@ -3,6 +3,7 @@ package me.skorrloregaming.hardscene.http;
 import java.net.Socket;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 public class WebSocketClient {
 
@@ -29,6 +30,11 @@ public class WebSocketClient {
 			int len = socket.getInputStream().read(b);
 			if (len == -1)
 				return "-1";
+			if (b.length >= 2 && b[0] == -118 && b[1] == -128) {
+				socket.getOutputStream().write(0xA);
+				socket.getOutputStream().flush();
+				return null;
+			}
 			byte rLength = 0;
 			int rMaskIndex = 2;
 			int rDataStart = 0;

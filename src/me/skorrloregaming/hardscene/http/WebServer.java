@@ -45,9 +45,8 @@ public class WebServer implements Runnable {
 			try (BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
 				String str;
 				while ((str = br.readLine()) != null) {
-					if (str.contains("Auth Token")) {
-						str = "<p><input style=\"width: 200px; border-radius: 5px;\" type=\"password\" id=\"name\" name=\"token\" value=\"\" placeholder=\"Auth Token\" disabled></p>";
-					}
+					if (str.contains("Auth Token"))
+						continue;
 					if (!HardScene.config.translationFeatures && str.contains("runTranslationFeatures(rawMessage);"))
 						continue;
 					if (str.contains("<script>") && type.equals("post")) {

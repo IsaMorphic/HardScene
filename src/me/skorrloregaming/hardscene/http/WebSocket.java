@@ -118,6 +118,8 @@ public class WebSocket implements Runnable {
 		try {
 			while (HardScene.running) {
 				String rawMessage = wsc.readMessage();
+				if (rawMessage == null)
+					continue;
 				if (rawMessage.length() == 2 && rawMessage.getBytes()[0] == 3 && rawMessage.getBytes()[1] == 63)
 					break;
 				if (rawMessage.equals("null") || rawMessage.equals("-1"))

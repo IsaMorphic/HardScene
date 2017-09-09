@@ -3,37 +3,154 @@
 	<head>
 		<title>HardScene</title>
 		<style>
-			pre {
-				white-space: pre-wrap;
-				white-space: -moz-pre-wrap;
-				white-space: -pre-wrap;
-				white-space: -o-pre-wrap;
-				word-wrap: break-word;
-			}
-			.centered {
-				position: fixed;
-				top: 50%;
-				left: 50%;
-			}
-			iframe {
-				width: 750px;
-				height: 450px;
-				border: 1px solid black;
-			}
-			body {
-				background-color: white;
-		    	-webkit-background-size: cover;
-		    	-moz-background-size: cover;
-		    	-o-background-size: cover;
-		    	background-size: cover;
-		    }
-			a {
-				text-decoration: none;
-				color: blue;
-			}
-			a:hover {
-				color: brown;
-			}
+@import url(https://fonts.googleapis.com/css?family=Roboto:300);
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+	background-color: #0F9D58;
+	text-align:center;
+}
+ul li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 10px 10px;
+}
+ul li a:hover {
+	cursor: pointer;
+	color: white;
+}
+.fl {
+    float:left;
+}
+.fr {
+    float:right;
+}
+.inline {
+    display:inline-block;
+}
+.login-page {
+  width: 360px;
+  padding: 8% 0 0;
+  margin: auto;
+}
+.form {
+  position: relative;
+  z-index: 1;
+  background: #FFFFFF;
+  max-width: 360px;
+  margin: 0 auto 100px;
+  padding: 45px;
+  text-align: center;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+.form-input {
+  font-family: "Roboto", sans-serif;
+  outline: 0;
+  background: #f2f2f2;
+  width: 100%;
+  border: 0;
+  margin: 0 0 15px;
+  padding: 15px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+.submit {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background-color: #4CAF50;
+  width: 100%;
+  border: 0;
+  padding: 15px;
+  color: #FFFFFF;
+  font-size: 14px;
+  -webkit-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+.submit:hover {
+  background-color: #43A047;
+}
+.form .message {
+  margin: 15px 0 0;
+  color: #b3b3b3;
+  font-size: 12px;
+}
+.form .register-form {
+  display: none;
+}
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 300px;
+  margin: 0 auto;
+}
+.container:before, .container:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.container .info {
+  margin: 50px auto;
+  text-align: center;
+}
+.container .info h1 {
+  margin: 0 0 15px;
+  padding: 0;
+  font-size: 36px;
+  font-weight: 300;
+  color: #1a1a1a;
+}
+.container .info span {
+  color: #4d4d4d;
+  font-size: 12px;
+}
+.container .info span a {
+  color: #000000;
+  text-decoration: none;
+}
+.container .info span .fa {
+  color: #EF3B3A;
+}
+pre {
+	white-space: pre-wrap;
+	white-space: -moz-pre-wrap;
+	white-space: -pre-wrap;
+	white-space: -o-pre-wrap;
+	word-wrap: break-word;
+}
+.centered {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+}
+iframe {
+	width: 750px;
+	height: 450px;
+	border: 1px solid black;
+}
+body {
+	background-color: white;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	font-family: "Roboto", sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+a {
+	text-decoration: none;
+	color: blue;
+}
+a:hover {
+	color: brown;
+	cursor: pointer;
+}
 		</style>
 		<script>
 var playSound = (function beep() {
@@ -268,6 +385,7 @@ function isMobile(ph) {
 				socket.onopen = function(event) {
 					var message = document.createElement('pre');
 					message.innerHTML = 'Connected.<br/>';
+					message.style = 'border-radius: 5px; background-color: white;';
 					document.getElementById('messageHistory').appendChild(message);
 					setTimeout(function() { socket.send(name + '~!' + token); }, 200);
 				};
@@ -275,10 +393,13 @@ function isMobile(ph) {
 					var rex = /(<([^>]+)>)/ig;
 					var rawMessage = linkify(event.data.replace(rex, ""));
 					var result = mineParse(rawMessage);
-                    document.getElementById('messageHistory').appendChild(result.parsed);
+					var element = result.parsed;
+					element.style = 'border-radius: 5px;';
+					var take = shouldScroll();
+                    document.getElementById('messageHistory').appendChild(element);
                     runTranslationFeatures(rawMessage);
                     if (!isMobile('') && !document.hasFocus()) playSound();
-                    scrollDown(shouldScroll());
+                    scrollDown(take);
 				};
 				socket.onclose = function(event) {
 					setTimeout(function() { window.location = window.location.href; }, 1000);
@@ -289,10 +410,13 @@ function isMobile(ph) {
 					var letterNumber = /^[0-9a-zA-Z]+$/;
 					if (name.length > 2 && name.length < 17) {
 						if (name.split("_").join("").match(letterNumber)) {
-							document.body.style.backgroundColor = "white";
-							document.body.style.margin = '0';
 							document.getElementById('loginPanel').style.display = 'none';
 							document.getElementById('perform').style.display = 'block';
+							document.body.style = 'margin: 0; background-color: white;';
+							var message = document.createElement('pre');
+							message.innerHTML = 'Connecting..<br/>';
+							message.style = 'border-radius: 5px; background-color: white;';
+							document.getElementById('messageHistory').appendChild(message);
 							connect();
 							return;
 						}
@@ -373,11 +497,13 @@ function embedYoutubeUrl(url) {
 }
 function shouldScroll() {
 	var isNearBottom = false;
-	if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 100) isNearBottom = true;
+	var element = document.getElementById('messageHistory');
+	if (element.scrollHeight - element.offsetHeight - element.scrollTop < 1) isNearBottom = true;
 	return isNearBottom;
 }
 function scrollDown(take) {
-	if (take && !isMobile('')) document.body.scrollTop = document.body.scrollHeight;
+	var element = document.getElementById('messageHistory');
+	if (take && !isMobile('')) element.scrollTop = element.scrollHeight;
 	return true;
 }
 function runTranslationFeatures(rawMessage) {
@@ -390,37 +516,36 @@ function runTranslationFeatures(rawMessage) {
 }
 		</script>
 	</head>
-	<body onload="load();">
-		<div id="loginPanel" name="loginPanel">
-			<center>
-			<div class="centered" style="height: 400px; width: 450px; border-radius: 5px; background-color: white; margin-top: -200px; margin-left: -225px;" id="subLoginPanel" name="subLoginPanel">
-				<br/><br/>
-				<h2>HardScene-Client</h2><br/>
-				<form method="post" action="">
-				<p><input style="width: 200px; border-radius: 5px;" type="text" id="name" name="name" value="" placeholder="Display Name"></p>
-				<p><input style="width: 200px; border-radius: 5px;" type="password" id="name" name="token" value="" placeholder="Auth Token"></p>
-				<p class="submit"><input style="width: 200px; height: 30px;" type="submit" name="commit" value="Login"></p>
+	<body onload="load();" style="margin: 0px; background-color: lightgray;">
+		<div class="login-page" id="loginPanel" name="loginPanel">
+  			<div class="form" id="subLoginPanel" name="subLoginPanel">
+				<form class="login-form" method="post" action="">
+					<h3 style="padding-bottom: 20px;">HardScene-Client</h3>
+					<input class="form-input" type="text" name="name" id="name" value="" placeholder="Display Name"/>
+					<input class="form-input" type="password" name="token" id="name" value="" placeholder="Auth Token"/>
+					<input type="submit" name="commit" id="commit" value="Login" class="submit">
+					<p class="message">Developed by <a href="https://github.com/Speentie8081" target="_blank">SkorrloreGaming (Speentie)</a></p>
 				</form>
-				<br/>
-				<p>Developed by <a href="https://github.com/Speentie8081" target="_blank">SkorrloreGaming (Speentie)</a></p>
 			</div>
-			</center>
 		</div>
 		<div id="perform" name="perform" style="display: none;">
-			<div style="background-color: white; padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px;" id="connection" name="connection">
-				<center style="padding-top: 15px;">
-					<a href="/">Disconnect</a> / <a href="#" onclick="document.getElementById('messageHistory').innerHTML = ''; return false;">Clear History</a>
-				</center>
-				<div id="messageHistory" name="messageHistory" style="width: 95%; padding-left: 10px; word-wrap: normal; overflow: hidden; padding-right: 10px; padding-top: 5px; padding-bottom: 5px;">
-					<pre>Connecting..</pre>
+			<div id="connection" name="connection">
+				<div id="topControls" name="topControls" style="width: 100%; height: 40px;">
+					<ul>
+						<li><a class="fl">HardScene-Client</a><li>
+						<li><a class="fr" href="/">Disconnect</a></li>
+						<li><a class="fr" href="#" onclick="document.getElementById('messageHistory').innerHTML = '';">Clear History</a></li>
+					</ul>
 				</div>
-				<div id="controls" name="controls">
-					<center>
+				<center>
+					<div id="messageHistory" name="messageHistory" style="text-align: left; width: 95%; height: 80%; word-wrap: normal; overflow: scroll;">
+					</div>
+					<div id="controls" name="controls" style="padding-top: 10px;">
 						<form action="return javascript.void(0);" autocomplete="off">
-							<input style="width: 95%; border-radius: 5px;" type="text" id="messageBox" name="messageBox" onkeydown="return keypress(event);">
+							<input style="width: 95%; height: 30px; border: 2px solid lightgray; border-radius: 5px;" type="text" id="messageBox" name="messageBox" onkeydown="return keypress(event);">
 						</form>
-					</center>
-				</div>
+					</div>
+				</center>
 			</div>
 		</div>
 	</body>
