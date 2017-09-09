@@ -64,12 +64,13 @@ public class CommandProcessEvent {
 						try (FileReader reader = new FileReader(HardScene.configFile)) {
 							p.load(reader);
 							p.setProperty("port", port + "");
-							if (HardScene.configFile.exists()) HardScene.configFile.delete();
+							if (HardScene.configFile.exists())
+								HardScene.configFile.delete();
 							FileOutputStream outputStream = new FileOutputStream(HardScene.configFile);
 							p.store(outputStream, null);
 							outputStream.close();
 						}
-						logger.sendMessage("Success. Server socket port changed.");	
+						logger.sendMessage("Success. Server socket port changed.");
 					} else {
 						logger.sendMessage("Failed. Server socket port was not changed.");
 					}

@@ -272,13 +272,13 @@ function isMobile(ph) {
 					setTimeout(function() { socket.send(name + '~!' + token); }, 200);
 				};
 				socket.onmessage = function(event) {
-					var isNearBottom = false;
-					if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 100) isNearBottom = true;
 					var rex = /(<([^>]+)>)/ig;
-					var result = mineParse(linkify(event.data.replace(rex, "")));
+					var rawMessage = linkify(event.data.replace(rex, ""));
+					var result = mineParse(rawMessage);
                     document.getElementById('messageHistory').appendChild(result.parsed);
+                    runTranslationFeatures(rawMessage);
                     if (!isMobile('') && !document.hasFocus()) playSound();
-					if (isNearBottom && !isMobile('')) document.body.scrollTop = document.body.scrollHeight - document.body.clientHeight;
+                    scrollDown(shouldScroll());
 				};
 				socket.onclose = function(event) {
 					setTimeout(function() { window.location = window.location.href; }, 1000);
@@ -321,6 +321,73 @@ function isMobile(ph) {
 				   	return false;
 				}
 			}
+function testImage(url, timeoutT) {
+	return new Promise(function(resolve, reject) {
+			var timeout = timeoutT || 5000;
+			var timer, img = new Image();
+			    img.onerror = img.onabort = function() {
+			    	clearTimeout(timer);
+			    	reject("error");
+				};
+			img.onload = function() {
+				clearTimeout(timer);
+				resolve("success");
+			};
+			timer = setTimeout(function() {
+				img.src = "//!!!!/noexist.jpg";
+				reject("timeout");
+			}, timeout);
+			img.src = url;
+    });
+}
+
+function record(url, result) {
+	if (result.indexOf("success") !== -1) {
+		var linkObj = document.createElement('a');
+		linkObj.href = url;
+		linkObj.target = '_blank';
+		linkObj.innerHTML = "<img src=\"" + url +"\" style=\"border-radius: 5px; border: 1px solid black; width=\"432\" height=\"243\"\"></img>";
+		var take = shouldScroll();
+		document.getElementById('messageHistory').appendChild(linkObj);
+		scrollDown(take);
+	}
+}
+
+function runImage(url) {
+	testImage(url).then(record.bind(null, url), record.bind(null, url));
+}
+
+function embedYoutubeUrl(url) {
+	var p = /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+	if(url.match(p)){
+    	var code = url.match(p)[1];
+    	var embedUrl = "https://www.youtube.com/embed/" + code;
+    	var embed = document.createElement('div');
+    	embed.innerHTML = "<iframe style=\"width: 432px; height: 243px; border-radius: 5px; border: 1px solid black;\" src=\"" + embedUrl + "\" frameborder=\"0\" allowfullscreen></iframe>";
+    	var take = shouldScroll();
+    	document.getElementById('messageHistory').appendChild(embed);
+    	scrollDown(take);
+    	return true;
+    }
+    return false;
+}
+function shouldScroll() {
+	var isNearBottom = false;
+	if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 100) isNearBottom = true;
+	return isNearBottom;
+}
+function scrollDown(take) {
+	if (take && !isMobile('')) document.body.scrollTop = document.body.scrollHeight;
+	return true;
+}
+function runTranslationFeatures(rawMessage) {
+	var fields = rawMessage.split('href="');
+	for (part of fields) {
+		var url = part.substring(0, part.indexOf("\""));
+		embedYoutubeUrl(url);
+		runImage(url);
+	}
+}
 		</script>
 	</head>
 	<body onload="load();">

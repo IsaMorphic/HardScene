@@ -68,6 +68,8 @@ public class WebServer implements Runnable {
 				}
 			} catch (ZipException e) {
 				Logger.info("Failed to retrieve default website template, possible memory leak ?");
+				Logger.info("Try fully restarting the server, and check if the problem persists.");
+				Logger.info("If so, file a ticket about the issue on our GitHub repository.");
 				out.writeBytes("Failed to retrieve default website template, possible memory leak ?");
 			}
 			out.flush();

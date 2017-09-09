@@ -20,7 +20,7 @@ public class HardScene_AuthThread implements Runnable {
 	public HardScene_AuthThread(Client client) {
 		this.client = client;
 	}
-	
+
 	public static String encodePassword(String password) {
 		return DatatypeConverter.printBase64Binary(password.getBytes());
 	}
@@ -40,7 +40,8 @@ public class HardScene_AuthThread implements Runnable {
 
 	public static boolean handleCommand(Client client, String message) {
 		String[] args = new String[0];
-		if (message.contains(" ")) args = message.substring(message.indexOf(" ")).split(" ");
+		if (message.contains(" "))
+			args = message.substring(message.indexOf(" ")).split(" ");
 		String label = message.split(" ")[0];
 		if (message.startsWith("/changepassword") || message.startsWith("/cp")) {
 			if (args.length < 2) {
@@ -88,7 +89,7 @@ public class HardScene_AuthThread implements Runnable {
 			client.sendMessage("HardScene - User command dictionary" + '\r' + '\n');
 			client.sendMessage("1. /changepassword -> Change your existing account password" + '\r' + '\n');
 			client.sendMessage("2. /unregister -> Unregister your account from the server" + '\r' + '\n');
-			client.sendMessage("3. /list -> Shows all the people that are connected" +  + '\r' + '\n');
+			client.sendMessage("3. /list -> Shows all the people that are connected" + +'\r' + '\n');
 			return true;
 		} else {
 			client.sendMessage("The specified command was not recognized as a valid command." + '\r' + '\n');

@@ -37,7 +37,7 @@ public class HardScene {
 	public static PropertyManager authManager = null;
 
 	public static HardScene instance = null;
-	
+
 	public static File configFile = null;
 
 	public static Date getLastCompilationTime() {

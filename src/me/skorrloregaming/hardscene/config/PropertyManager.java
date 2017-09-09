@@ -26,7 +26,8 @@ public class PropertyManager {
 	}
 
 	public boolean addProperty(String key, String value) {
-		if (HardScene.config.development) return false;
+		if (HardScene.config.development)
+			return false;
 		if (propertyExists(key))
 			return false;
 		String addonProperty = '\n' + key + "=" + value;
@@ -54,7 +55,8 @@ public class PropertyManager {
 	}
 
 	public boolean removeProperty(String key) {
-		if (HardScene.config.development) return false;
+		if (HardScene.config.development)
+			return false;
 		if (!propertyExists(key))
 			return false;
 		String body = "";
@@ -88,8 +90,8 @@ public class PropertyManager {
 		writer.close();
 		return true;
 	}
-	
-	public String getProperty(String key){
+
+	public String getProperty(String key) {
 		Scanner scan = null;
 		try {
 			scan = new Scanner(file);
@@ -108,7 +110,8 @@ public class PropertyManager {
 	}
 
 	public boolean propertyExists(String key) {
-		if (HardScene.config.development) return false;
+		if (HardScene.config.development)
+			return false;
 		Scanner scan = null;
 		try {
 			scan = new Scanner(file);

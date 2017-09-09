@@ -15,7 +15,7 @@ public class WebSocketClient {
 		this.socket = socket;
 		this.id = id;
 	}
-	
+
 	public WebSocketClient(Socket socket, Integer id, String name, String token) {
 		this.socket = socket;
 		this.id = id;

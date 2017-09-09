@@ -7,12 +7,12 @@ import me.skorrloregaming.hardscene.interfaces.Client;
 import me.skorrloregaming.hardscene.interfaces.Logger;
 
 public class ClientAuthenticateEvent {
-	
+
 	public ClientAuthenticateEvent(Client client) throws IOException {
 		Logger.info(client.address + " has authenticated with the server.");
 		String message = client.name + " has authenticated with the server.";
 		Logger.info(message);
 		HardScene.broadcast(message);
 	}
-	
+
 }
