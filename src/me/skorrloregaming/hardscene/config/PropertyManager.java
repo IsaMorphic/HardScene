@@ -70,12 +70,12 @@ public class PropertyManager {
 		while (scan.hasNextLine()) {
 			String line = scan.nextLine();
 			if (!line.split("=")[0].equals(key)) {
-				body += line;
+				body += line + '\n';
 			} else {
 				if (!found) {
 					found = true;
 				} else {
-					body += line;
+					body += line + '\n';
 				}
 			}
 		}
