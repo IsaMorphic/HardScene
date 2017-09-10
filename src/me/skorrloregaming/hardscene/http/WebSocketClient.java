@@ -3,7 +3,6 @@ package me.skorrloregaming.hardscene.http;
 import java.net.Socket;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 
 public class WebSocketClient {
 
@@ -31,8 +30,7 @@ public class WebSocketClient {
 			if (len == -1)
 				return "-1";
 			if (b.length >= 2 && b[0] == -118 && b[1] == -128) {
-				socket.getOutputStream().write(0xA);
-				socket.getOutputStream().flush();
+				sendOpcode(0xA);
 				return null;
 			}
 			byte rLength = 0;
@@ -68,6 +66,52 @@ public class WebSocketClient {
 		try {
 			byte[] response;
 			byte[] bytesRaw = msg.getBytes(Charset.forName("UTF-8"));
+			byte[] frame = new byte[10];
+			int indexStartRawData = -1;
+			int length = bytesRaw.length;
+			frame[0] = (byte) 129;
+			if (length <= 125) {
+				frame[1] = (byte) length;
+				indexStartRawData = 2;
+			} else if (length >= 126 && length <= 65535) {
+				frame[1] = (byte) 126;
+				frame[2] = (byte) ((length >> 8) & 255);
+				frame[3] = (byte) (length & 255);
+				indexStartRawData = 4;
+			} else {
+				frame[1] = (byte) 127;
+				frame[2] = (byte) ((length >> 56) & 255);
+				frame[3] = (byte) ((length >> 48) & 255);
+				frame[4] = (byte) ((length >> 40) & 255);
+				frame[5] = (byte) ((length >> 32) & 255);
+				frame[6] = (byte) ((length >> 24) & 255);
+				frame[7] = (byte) ((length >> 16) & 255);
+				frame[8] = (byte) ((length >> 8) & 255);
+				frame[9] = (byte) (length & 255);
+				indexStartRawData = 10;
+			}
+			response = new byte[indexStartRawData + length];
+			int i, reponseIdx = 0;
+			for (i = 0; i < indexStartRawData; i++) {
+				response[reponseIdx] = frame[i];
+				reponseIdx++;
+			}
+			for (i = 0; i < length; i++) {
+				response[reponseIdx] = bytesRaw[i];
+				reponseIdx++;
+			}
+			socket.getOutputStream().write(response);
+			socket.getOutputStream().flush();
+			return true;
+		} catch (Exception ex) {
+			return false;
+		}
+	}
+	
+	public boolean sendOpcode(int opcode) {
+		try {
+			byte[] response;
+			byte[] bytesRaw = new byte[] { (byte) opcode };
 			byte[] frame = new byte[10];
 			int indexStartRawData = -1;
 			int length = bytesRaw.length;

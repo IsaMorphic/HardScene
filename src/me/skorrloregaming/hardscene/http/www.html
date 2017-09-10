@@ -1,7 +1,8 @@
-<!-- Code developed by SkorrloreGaming-Productions -->
 <html>
 	<head>
 		<title>HardScene</title>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+		<meta http-equiv="language" content="en-us" />
 		<style>
 @import url(https://fonts.googleapis.com/css?family=Roboto:300);
 
@@ -12,6 +13,7 @@ ul {
     overflow: hidden;
 	background-color: #0F9D58;
 	text-align:center;
+	box-shadow: 0px 5px 5px lightgray;
 }
 ul li a {
     display: block;
@@ -22,6 +24,7 @@ ul li a {
 ul li a:hover {
 	cursor: pointer;
 	color: white;
+	background-color: #0d8c4f;
 }
 .fl {
     float:left;
@@ -385,27 +388,32 @@ function isMobile(ph) {
 				socket.onopen = function(event) {
 					var message = document.createElement('pre');
 					message.innerHTML = 'Connected.<br/>';
-					message.style = 'border-radius: 5px; background-color: white;';
 					document.getElementById('messageHistory').appendChild(message);
 					setTimeout(function() { socket.send(name + '~!' + token); }, 200);
 				};
 				socket.onmessage = function(event) {
 					var rex = /(<([^>]+)>)/ig;
-					var rawMessage = linkify(event.data.replace(rex, ""));
-					var result = mineParse(rawMessage);
-					var element = result.parsed;
-					element.style = 'border-radius: 5px;';
-					var take = shouldScroll();
-                    document.getElementById('messageHistory').appendChild(element);
-                    runTranslationFeatures(rawMessage);
-                    if (!isMobile('') && !document.hasFocus()) playSound();
-                    scrollDown(take);
+					if (event.data.length > 1) {
+						var rawMessage = linkify(event.data.replace(rex, ""));
+						var element = null;
+						try {
+							element = mineParse(rawMessage).parsed;
+						} catch (e) {
+							element = document.createElement('pre');
+							element.innerHTML = rawMessage;
+						}
+						var take = shouldScroll();
+                  	 	document.getElementById('messageHistory').appendChild(element);
+                   	 	runTranslationFeatures(rawMessage);
+                   	 	if (!isMobile('') && !document.hasFocus()) playSound();
+                   	 	scrollDown(take);
+					}
 				};
 				socket.onclose = function(event) {
 					setTimeout(function() { window.location = window.location.href; }, 1000);
 				};
 			}
-			var load = function() {
+			window.onload = function () {
 				if (typeof name !== 'undefined' && typeof token !== 'undefined') {
 					var letterNumber = /^[0-9a-zA-Z]+$/;
 					if (name.length > 2 && name.length < 17) {
@@ -415,7 +423,6 @@ function isMobile(ph) {
 							document.body.style = 'margin: 0; background-color: white;';
 							var message = document.createElement('pre');
 							message.innerHTML = 'Connecting..<br/>';
-							message.style = 'border-radius: 5px; background-color: white;';
 							document.getElementById('messageHistory').appendChild(message);
 							connect();
 							return;
@@ -508,7 +515,8 @@ function scrollDown(take) {
 }
 function runTranslationFeatures(rawMessage) {
 	var fields = rawMessage.split('href="');
-	for (part of fields) {
+	for (i = 0; i < fields.length; i++) {
+		var part = fields[i];
 		var url = part.substring(0, part.indexOf("\""));
 		embedYoutubeUrl(url);
 		runImage(url);
@@ -516,7 +524,7 @@ function runTranslationFeatures(rawMessage) {
 }
 		</script>
 	</head>
-	<body onload="load();" style="margin: 0px; background-color: lightgray;">
+	<body style="margin: 0px; overflow: hidden;">
 		<div class="login-page" id="loginPanel" name="loginPanel">
   			<div class="form" id="subLoginPanel" name="subLoginPanel">
 				<form class="login-form" method="post" action="">
@@ -530,19 +538,19 @@ function runTranslationFeatures(rawMessage) {
 		</div>
 		<div id="perform" name="perform" style="display: none;">
 			<div id="connection" name="connection">
-				<div id="topControls" name="topControls" style="width: 100%; height: 40px;">
+				<div id="topControls" name="topControls" style="width: 100%; height: 40px; padding-bottom: 10px;">
 					<ul>
 						<li><a class="fl">HardScene-Client</a><li>
-						<li><a class="fr" href="/">Disconnect</a></li>
-						<li><a class="fr" href="#" onclick="document.getElementById('messageHistory').innerHTML = '';">Clear History</a></li>
+						<li><a class="fr darker" href="/">Disconnect</a></li>
+						<li><a class="fr darker" href="#" onclick="document.getElementById('messageHistory').innerHTML = '';">Clear History</a></li>
 					</ul>
 				</div>
 				<center>
-					<div id="messageHistory" name="messageHistory" style="text-align: left; width: 95%; height: 80%; word-wrap: normal; overflow: scroll;">
+					<div id="messageHistory" name="messageHistory" style="display: block; text-align: left; width: 97%; height: 80%; word-wrap: normal; overflow: auto;">
 					</div>
 					<div id="controls" name="controls" style="padding-top: 10px;">
 						<form action="return javascript.void(0);" autocomplete="off">
-							<input style="width: 95%; height: 30px; border: 2px solid lightgray; border-radius: 5px;" type="text" id="messageBox" name="messageBox" onkeydown="return keypress(event);">
+							<input style="width: 97%; height: 30px; border: 2px solid lightgray;" type="text" id="messageBox" name="messageBox" onkeydown="return keypress(event);" placeholder="Send a message">
 						</form>
 					</div>
 				</center>
