@@ -15,6 +15,43 @@ public class CommandProcessEvent {
 		try {
 			if (args[0].equalsIgnoreCase("help")) {
 				viewHelp(logger);
+			} else if (args[0].equalsIgnoreCase("op")) {
+				if (args.length >= 2) {
+					String address = args[1];
+					boolean hit = false;
+					for (Client c : HardScene.instance.clients.values()) {
+						if (c.name.equalsIgnoreCase(address)) {
+							address = c.name;
+							hit = true;
+						}
+					}
+					if (hit) {
+						boolean result = HardScene.operatorManager.addProperty(address);
+						if (result) {
+							logger.sendMessage("Success. That address is now considered operator.");
+						} else {
+							logger.sendMessage("Failed. That address is already operator.");
+						}
+					} else {
+						logger.sendMessage("Could not find a client with that username.");
+						return;
+					}
+				} else {
+					logger.sendMessage("Failed. Syntax: '" + logger.preCommandSyntax + "ban (ip)'");
+				}
+			} else if (args[0].equalsIgnoreCase("deop")) {
+				if (args.length >= 2) {
+					String address = args[1];
+					boolean result = HardScene.operatorManager.removeProperty(address);
+					if (result) {
+						logger.sendMessage("Success. That address is no longer operator.");
+					} else {
+						logger.sendMessage("Failed. Could not find a operator with that username.");
+						logger.sendMessage("Just so you know, the username is case-sensitive.");
+					}
+				} else {
+					logger.sendMessage("Failed. Syntax: '" + logger.preCommandSyntax + "pardon (ip)'");
+				}
 			} else if (args[0].equalsIgnoreCase("ban")) {
 				if (args.length >= 2) {
 					String address = args[1];
@@ -31,7 +68,7 @@ public class CommandProcessEvent {
 						logger.sendMessage("Failed. That address is already not allowed to connect.");
 					}
 				} else {
-					logger.sendMessage("Failed. Syntax: '" + preCommandSyntax + "ban <ip>'");
+					logger.sendMessage("Failed. Syntax: '" + logger.preCommandSyntax + "ban (ip)'");
 				}
 			} else if (args[0].equalsIgnoreCase("pardon")) {
 				if (args.length >= 2) {
@@ -43,7 +80,7 @@ public class CommandProcessEvent {
 						logger.sendMessage("Failed. That address is currently allowed to connect.");
 					}
 				} else {
-					logger.sendMessage("Failed. Syntax: '" + preCommandSyntax + "pardon <ip>'");
+					logger.sendMessage("Failed. Syntax: '" + logger.preCommandSyntax + "pardon (ip)'");
 				}
 			} else if (args[0].equalsIgnoreCase("check")) {
 				if (HardScene.running) {
@@ -120,7 +157,7 @@ public class CommandProcessEvent {
 					}
 					logger.sendMessage("Success.");
 				} else {
-					logger.sendMessage("Failed. Syntax: '" + preCommandSyntax + "kick <id>'");
+					logger.sendMessage("Failed. Syntax: '" + logger.preCommandSyntax + "kick (id)'");
 				}
 			} else if (args[0].equalsIgnoreCase("broadcast")) {
 				if (args.length >= 2) {
@@ -150,7 +187,7 @@ public class CommandProcessEvent {
 					logger.sendMessage("Success. Sent message privately to client " + c.id + ".");
 					return;
 				} else {
-					logger.sendMessage("Failed. Syntax: '" + preCommandSyntax + "tell <id> <message>'");
+					logger.sendMessage("Failed. Syntax: '" + logger.preCommandSyntax + "tell (id) (message)'");
 				}
 			} else if (args[0].equalsIgnoreCase("list")) {
 				if (args.length >= 2) {
@@ -161,7 +198,7 @@ public class CommandProcessEvent {
 						}
 						return;
 					} else {
-						logger.sendMessage("Failed. Syntax: '" + preCommandSyntax + "list [/a]'");
+						logger.sendMessage("Failed. Syntax: '" + logger.preCommandSyntax + "list [/a]'");
 						return;
 					}
 				}
@@ -178,20 +215,20 @@ public class CommandProcessEvent {
 		}
 	}
 
-	String preCommandSyntax = "";
-
 	public void viewHelp(LegacyCommandSender logger) {
 		logger.sendMessage("HardScene - Commands");
-		logger.sendMessage("" + preCommandSyntax + "help - Display this listing.");
-		logger.sendMessage("" + preCommandSyntax + "ban <ip> - Ban client.");
-		logger.sendMessage("" + preCommandSyntax + "pardon <ip> - Pardon client.");
-		logger.sendMessage("" + preCommandSyntax + "kick <id> - Kick client.");
-		logger.sendMessage("" + preCommandSyntax + "check - Check state of server.");
-		logger.sendMessage("" + preCommandSyntax + "reload [port] - Reload server config.");
-		logger.sendMessage("" + preCommandSyntax + "stop - Shutdown the server.");
-		logger.sendMessage("" + preCommandSyntax + "list [/a] - List clients.");
-		logger.sendMessage("" + preCommandSyntax + "tell <id> <msg> - Message client.");
-		logger.sendMessage("" + preCommandSyntax + "broadcast <msg> - Broadcast message.");
+		logger.sendMessage("" + logger.preCommandSyntax + "help - Display this listing.");
+		logger.sendMessage("" + logger.preCommandSyntax + "op (clientName) - Op client.");
+		logger.sendMessage("" + logger.preCommandSyntax + "deop (clientName) - Deop client.");
+		logger.sendMessage("" + logger.preCommandSyntax + "ban (ip) - Ban client.");
+		logger.sendMessage("" + logger.preCommandSyntax + "pardon (ip) - Pardon client.");
+		logger.sendMessage("" + logger.preCommandSyntax + "kick (id) - Kick client.");
+		logger.sendMessage("" + logger.preCommandSyntax + "check - Check state of server.");
+		logger.sendMessage("" + logger.preCommandSyntax + "reload [port] - Reload server config.");
+		logger.sendMessage("" + logger.preCommandSyntax + "stop - Shutdown the server.");
+		logger.sendMessage("" + logger.preCommandSyntax + "list [/a] - List clients.");
+		logger.sendMessage("" + logger.preCommandSyntax + "tell (id) (msg) - Message client.");
+		logger.sendMessage("" + logger.preCommandSyntax + "broadcast (msg) - Broadcast message.");
 	}
 
 }

@@ -393,6 +393,7 @@ function isMobile(ph) {
 							var message = document.createElement('p');
 							message.innerHTML = 'Connecting..<br/>';
 							document.getElementById('messageHistory').appendChild(message);
+							setInterval(checkForAuth, 200);
 							connect();
 							return;
 						}
@@ -493,6 +494,23 @@ function runTranslationFeatures(rawMessage) {
 		runImage(url);
 	}
 }
+function checkForAuth() {
+	var element = document.getElementById('messageBox');
+	var value = element.value;
+	if (value.indexOf("/unreg ") == 0 || value.indexOf("/cp ") == 0 || value.indexOf("/login ") == 0 || value.indexOf("/register ") == 0 || value.indexOf("/changepassword ") == 0 || value.indexOf("/unregister ") == 0) {
+		try {
+			document.getElementById("messageBox").attributes["type"].value = "password";
+		} catch (e) {
+			document.getElementById("messageBox").setAttribute('type', 'password');
+		}
+	} else {
+		try {
+			document.getElementById("messageBox").attributes["type"].value = "text";
+		} catch (e) {
+			document.getElementById("messageBox").setAttribute('type', 'text');
+		}
+	}
+}
 		</script>
 	</head>
 	<body style="margin: 0px; overflow: hidden;">
@@ -519,7 +537,7 @@ function runTranslationFeatures(rawMessage) {
 				<div class="history" id="messageHistory" name="messageHistory" style="word-wrap: normal; overflow: auto; height: calc(100% - 80px); height: -moz-calc(100% - 80px); height: -webkit-calc(100% - 80px); height: -o-calc(100% - 80px);">
 				</div>
 				<form autocomplete="off" style="height: 40px; padding: 0; margin: 0;">
-					<input class="clear-input" style="width: 100%; height: 40px; border: 1px solid lightgray;" type="text" id="messageBox" name="messageBox" onkeydown="return keypss(event);" placeholder="Send a message">
+					<input class="clear-input" style="width: 100%; height: 40px; border: 1px solid lightgray;" type="text" id="messageBox" name="messageBox" onkeydown="return keypss(event);" placeholder="Send a message" value="">
 				</form>
 			</div>
 		</div>

@@ -54,6 +54,8 @@ public class HardScene_ListenThread implements Runnable {
 					break;
 				String rawMessage = new String(messageBytes, StandardCharsets.UTF_8).trim();
 				String message = rawMessage;
+				if (HardScene.config.enableSwearFilter)
+					message = HardScene.instance.processAntiSwear(client, message);
 				if (HardScene.config.colorCodes) {
 					message = message.replace("&", "§");
 				} else {

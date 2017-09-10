@@ -6,8 +6,10 @@ import javax.xml.bind.DatatypeConverter;
 
 import me.skorrloregaming.hardscene.HardScene;
 import me.skorrloregaming.hardscene.event.ClientAuthenticateEvent;
+import me.skorrloregaming.hardscene.event.CommandProcessEvent;
 import me.skorrloregaming.hardscene.http.WebSocketClient;
 import me.skorrloregaming.hardscene.interfaces.Client;
+import me.skorrloregaming.hardscene.interfaces.LegacyCommandSender;
 
 public class HardScene_AuthThread implements Runnable {
 
@@ -43,7 +45,19 @@ public class HardScene_AuthThread implements Runnable {
 		if (message.contains(" "))
 			args = message.substring(message.indexOf(" ")).split(" ");
 		String label = message.split(" ")[0];
-		if (message.startsWith("/changepassword") || message.startsWith("/cp")) {
+		if (message.startsWith("/hardscene") || message.startsWith("/hr")) {
+			if (HardScene.operatorManager.propertyExists(client.name)) {
+				if (message.split(" ").length > 1) {
+					String command = message.substring(message.indexOf(" ") + 1);
+					new CommandProcessEvent(command.split(" "), new LegacyCommandSender(client, label + " "));
+				} else {
+					new CommandProcessEvent("help ".split(" "), new LegacyCommandSender(client, label + " "));
+				}
+			} else {
+				client.sendMessage("You do not have permission to execute this command.");
+			}
+			return true;
+		} else if (message.startsWith("/changepassword") || message.startsWith("/cp")) {
 			if (args.length < 2) {
 				client.sendMessage("Syntax: " + label + " (currentPassword) (newPassword)");
 			} else {
@@ -87,9 +101,15 @@ public class HardScene_AuthThread implements Runnable {
 			return true;
 		} else if (message.startsWith("/help")) {
 			client.sendMessage("HardScene - User command dictionary" + '\r' + '\n');
-			client.sendMessage("1. /changepassword -> Change your existing account password" + '\r' + '\n');
-			client.sendMessage("2. /unregister -> Unregister your account from the server" + '\r' + '\n');
+			client.sendMessage("1. /changepassword (/cp) -> Change your existing account password" + '\r' + '\n');
+			client.sendMessage("2. /unregister (/unreg) -> Unregister your account from the server" + '\r' + '\n');
 			client.sendMessage("3. /list -> Shows all the people that are connected" + '\r' + '\n');
+			if (HardScene.operatorManager.propertyExists(client.name)) {
+				client.sendMessage("HardScene - Admin command dictionary" + '\r' + '\n');
+				client.sendMessage("1. /hardscene (/hr) -> Access the administrative commands" + '\r' + '\n');
+			} else {
+				client.sendMessage("You don't have permission to access administrative commands.");
+			}
 			return true;
 		} else {
 			client.sendMessage("The specified command was not recognized as a valid command." + '\r' + '\n');

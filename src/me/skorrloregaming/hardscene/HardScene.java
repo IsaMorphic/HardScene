@@ -9,6 +9,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,8 +18,8 @@ import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
 import me.skorrloregaming.hardscene.config.ConfigurationManager;
-import me.skorrloregaming.hardscene.config.PropertyManager;
 import me.skorrloregaming.hardscene.config.LocalizationManager;
+import me.skorrloregaming.hardscene.config.PropertyManager;
 import me.skorrloregaming.hardscene.event.CommandProcessEvent;
 import me.skorrloregaming.hardscene.interfaces.Client;
 import me.skorrloregaming.hardscene.interfaces.LegacyCommandSender;
@@ -33,12 +34,16 @@ public class HardScene {
 	public static ServerSocket server = null;
 	public static ConfigurationManager config = null;
 
+	public static LocalizationManager operatorManager = null;
 	public static LocalizationManager bannedManager = null;
 	public static PropertyManager authManager = null;
 
 	public static HardScene instance = null;
 
 	public static File configFile = null;
+
+	private SwearData swearData;
+	private ArrayList<String> swearWords = new ArrayList<String>();
 
 	public static Date getLastCompilationTime() {
 		Date d = null;
@@ -78,6 +83,44 @@ public class HardScene {
 	}
 
 	public void onEnable() {
+		swearData = new SwearData();
+		swearWords.add("fuck");
+		swearWords.add("nigga");
+		swearWords.add("nigger");
+		swearWords.add("bitch");
+		swearWords.add("dick");
+		swearWords.add("cunt");
+		swearWords.add("crap");
+		swearWords.add("shit");
+		swearWords.add("whore");
+		swearWords.add("twat");
+		swearWords.add("arse");
+		swearWords.add("ass");
+		swearWords.add("horny");
+		swearWords.add("aroused");
+		swearWords.add("hentai");
+		swearWords.add("slut");
+		swearWords.add("slag");
+		swearWords.add("boob");
+		swearWords.add("pussy");
+		swearWords.add("vagina");
+		swearWords.add("faggot");
+		swearWords.add("bugger");
+		swearWords.add("bastard");
+		swearWords.add("anal");
+		swearWords.add("wanker");
+		swearWords.add("rape");
+		swearWords.add("rapist");
+		swearWords.add("cock");
+		swearWords.add("titt");
+		swearWords.add("piss");
+		swearWords.add("spunk");
+		swearWords.add("milf");
+		swearWords.add("anus");
+		swearWords.add("dafuq");
+		for (String string : swearWords)
+			swearData.fill(string);
+		operatorManager = new LocalizationManager(new File("hardscene_operators.properties"));
 		authManager = new PropertyManager(new File("hardscene_auth.properties"));
 		bannedManager = new LocalizationManager(new File("hardscene_banned.properties"));
 		startServer();
@@ -120,6 +163,56 @@ public class HardScene {
 		}
 		scanner.close();
 		return true;
+	}
+
+	public String processAntiSwear(Client client, String message) {
+		String modifiedMessage = message;
+		char[] messageChars = modifiedMessage.toCharArray();
+		Swear commonSwear = new Swear(0, false, "", 0);
+		boolean detectedSwearing = false;
+		for (int i = 0; i < modifiedMessage.length() + 1; i++) {
+			if (commonSwear.getArg1()) {
+				String currentSwear = commonSwear.getArg2();
+				int startIndex = commonSwear.getArg0();
+				if (swearWords.contains(currentSwear.toLowerCase().replace(" ", ""))) {
+					int endIndex = commonSwear.getArg3();
+					for (int index = startIndex; index < endIndex + 1; index++) {
+						messageChars[index] = '*';
+					}
+					modifiedMessage = new String(messageChars);
+					commonSwear = new Swear(0, false, "", 0);
+					detectedSwearing = true;
+					i = 0;
+					continue;
+				} else if (messageChars.length > i) {
+					if (swearData.get(currentSwear.length()).contains(Character.toLowerCase(messageChars[i]))) {
+						currentSwear += messageChars[i];
+						boolean taskSuccess = false;
+						for (String string : swearWords) {
+							if (string.contains(currentSwear.toLowerCase())) {
+								taskSuccess = true;
+								break;
+							}
+						}
+						if (taskSuccess) {
+							commonSwear = new Swear(startIndex, true, currentSwear, i);
+							continue;
+						}
+					}
+					if (!(messageChars[i] == ' ')) {
+						commonSwear = new Swear(0, false, "", 0);
+					}
+				}
+			}
+			if (messageChars.length > i && swearData.get(0).contains(Character.toLowerCase(messageChars[i]))) {
+				commonSwear = new Swear(i, true, messageChars[i] + "", i);
+				continue;
+			}
+		}
+		if (detectedSwearing) {
+			client.sendMessage("Please do not swear, otherwise action will be taken.");
+		}
+		return modifiedMessage;
 	}
 
 	public static String trim(String str) {

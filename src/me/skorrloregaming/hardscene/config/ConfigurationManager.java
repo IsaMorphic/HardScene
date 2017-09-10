@@ -17,6 +17,7 @@ public class ConfigurationManager {
 	public boolean colorCodes = true;
 	public boolean doRequireInfo = true;
 	public boolean translationFeatures = true;
+	public boolean enableSwearFilter = true;
 
 	public boolean development = false;
 
@@ -30,13 +31,51 @@ public class ConfigurationManager {
 		if (file.exists()) {
 			try (FileReader reader = new FileReader(file)) {
 				p.load(reader);
-				port = Integer.parseInt(p.getProperty("port"));
-				log = Boolean.parseBoolean(p.getProperty("log"));
-				allowSameNameClients = Boolean.parseBoolean(p.getProperty("allowSameNameClients"));
-				messageFormat = String.valueOf(p.getProperty("messageFormat")).replace("&", "§");
-				colorCodes = Boolean.parseBoolean(p.getProperty("colorCodes"));
-				doRequireInfo = Boolean.parseBoolean(p.getProperty("doRequireInfo"));
-				translationFeatures = Boolean.parseBoolean(p.getProperty("translationFeatures"));
+				boolean problem = false;
+				try {
+					port = Integer.parseInt(p.getProperty("port"));
+				} catch (Exception ex) {
+					problem = true;
+				}
+				try {
+					log = Boolean.parseBoolean(p.getProperty("log"));
+				} catch (Exception ex) {
+					problem = true;
+				}
+				try {
+					allowSameNameClients = Boolean.parseBoolean(p.getProperty("allowSameNameClients"));
+				} catch (Exception ex) {
+					problem = true;
+				}
+				try {
+					messageFormat = String.valueOf(p.getProperty("messageFormat")).replace("&", "§");
+				} catch (Exception ex) {
+					problem = true;
+				}
+				try {
+					colorCodes = Boolean.parseBoolean(p.getProperty("colorCodes"));
+				} catch (Exception ex) {
+					problem = true;
+				}
+				try {
+					doRequireInfo = Boolean.parseBoolean(p.getProperty("doRequireInfo"));
+				} catch (Exception ex) {
+					problem = true;
+				}
+				try {
+					translationFeatures = Boolean.parseBoolean(p.getProperty("translationFeatures"));
+				} catch (Exception ex) {
+					problem = true;
+				}
+				try {
+					enableSwearFilter = Boolean.parseBoolean(p.getProperty("enableSwearFilter"));
+				} catch (Exception ex) {
+					problem = true;
+				}
+				if (problem) {
+					Logger.info("Could not successfully load all configuration options.");
+					Logger.info("It is recommended in this case to delete the config and restart.");
+				}
 			}
 		} else {
 			PrintWriter writer = null;
@@ -54,6 +93,7 @@ public class ConfigurationManager {
 			writer.println("messageFormat=" + messageFormat);
 			writer.println("colorCodes=" + colorCodes);
 			writer.println("translationFeatures=" + translationFeatures);
+			writer.println("enableSwearFilter=" + enableSwearFilter);
 			writer.close();
 		}
 	}

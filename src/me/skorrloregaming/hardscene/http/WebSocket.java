@@ -124,6 +124,8 @@ public class WebSocket implements Runnable {
 					break;
 				if (rawMessage.equals("null") || rawMessage.equals("-1"))
 					break;
+				if (HardScene.config.enableSwearFilter)
+					rawMessage = HardScene.instance.processAntiSwear(getClientAlternative(), rawMessage);
 				if (HardScene.config.colorCodes) {
 					rawMessage = rawMessage.replace("&", "§");
 				} else {
