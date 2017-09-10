@@ -388,6 +388,7 @@ function isMobile(ph) {
 					if (name.length > 2 && name.length < 17) {
 						if (name.split("_").join("").match(letterNumber)) {
 							document.getElementById('loginPanel').remove();
+							document.getElementById('perform').display = 'block';
 							document.body.style = 'margin: 0; background-color: white; margin: 0; width: 100%; height: 100%;';
 							var message = document.createElement('p');
 							message.innerHTML = 'Connecting..<br/>';
@@ -506,7 +507,7 @@ function runTranslationFeatures(rawMessage) {
 				</form>
 			</div>
 		</div>
-		<div id="perform" name="perform" style="width: 100%; height: 100%;">
+		<div id="perform" name="perform" style="width: 100%; height: 100%; display: hidden;">
 			<div id="connection" name="connection" style="width: 100%; height: 100%;">
 				<div id="topControls" name="topControls" style="width: 100%; height: 40px;">
 					<ul>
