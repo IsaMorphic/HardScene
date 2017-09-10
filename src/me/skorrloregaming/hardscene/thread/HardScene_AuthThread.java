@@ -89,7 +89,7 @@ public class HardScene_AuthThread implements Runnable {
 			client.sendMessage("HardScene - User command dictionary" + '\r' + '\n');
 			client.sendMessage("1. /changepassword -> Change your existing account password" + '\r' + '\n');
 			client.sendMessage("2. /unregister -> Unregister your account from the server" + '\r' + '\n');
-			client.sendMessage("3. /list -> Shows all the people that are connected" + +'\r' + '\n');
+			client.sendMessage("3. /list -> Shows all the people that are connected" + '\r' + '\n');
 			return true;
 		} else {
 			client.sendMessage("The specified command was not recognized as a valid command." + '\r' + '\n');
