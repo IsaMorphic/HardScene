@@ -4,15 +4,17 @@ A free server frame implementation designed to work with HardScene-Client.
 # Commands
 
 01. $ help - Displays a listing equal or close to this copy
-02. $ ban (ip) - Attemps to ban the specified IP from the server
-03. $ pardon (ip) - Attempts to remove the specified IP from banned clients
-04. $ kick (id) - Attemps to kick the specified client from the server
-05. $ check - Attempts to check if the server is running or not
-06. $ stop - Attempts to shutdown the HardScene server safely
-07. $ reload [port] - Attempts to reload the legacy configuration file
-08. $ list [/a] - Attemps to list the connected clients on the server
-09. $ tell (id) (msg) - Sends a message to the specified client
-10. $ broadcast (msg) - Broadcasts a message to the server
+02. $ op (clientName) - Attempts to give the specified player operator
+03. $ deop (clientName) - Attempts to take away operator from specified player
+04. $ ban (ip) - Attemps to ban the specified IP from the server
+05. $ pardon (ip) - Attempts to remove the specified IP from banned clients
+06. $ kick (id) - Attemps to kick the specified client from the server
+07. $ check - Attempts to check if the server is running or not
+08. $ stop - Attempts to shutdown the HardScene server safely
+09. $ reload [port] - Attempts to reload the legacy configuration file
+10. $ list [/a] - Attemps to list the connected clients on the server
+11. $ tell (id) (msg) - Sends a message to the specified client
+12. $ broadcast (msg) - Broadcasts a message to the server
 
 # Notes for running HardScene
 
