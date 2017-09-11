@@ -112,7 +112,7 @@ public class HardScene_AuthThread implements Runnable {
 			}
 			return true;
 		} else {
-			client.sendMessage("The specified command was not recognized as a valid command." + '\r' + '\n');
+			client.sendMessage("Unknown command. Type \"/help\" for help." + '\r' + '\n');
 			return false;
 		}
 	}

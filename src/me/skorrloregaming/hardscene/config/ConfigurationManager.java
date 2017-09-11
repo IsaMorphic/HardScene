@@ -13,7 +13,7 @@ public class ConfigurationManager {
 	public int port = 28894;
 	public boolean log = true;
 	public boolean allowSameNameClients = false;
-	public String messageFormat = "{client}: {message}";
+	public String messageFormat = "&1{client}&r&l:&r {message}";
 	public boolean colorCodes = true;
 	public boolean doRequireInfo = true;
 	public boolean translationFeatures = true;
