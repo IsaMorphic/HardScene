@@ -23,6 +23,7 @@ public class ClientDisconnectEvent {
 				HardScene.instance.clients.remove(client.id);
 			}
 			String message = HardScene.config.leaveFormat.replace("{client}", client.name);
+			message = message.replace("", "");
 			Logger.info(message);
 			HardScene.broadcast(message);
 		}

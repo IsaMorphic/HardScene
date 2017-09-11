@@ -28,10 +28,10 @@ public class ConfigurationManager {
 		if (System.getenv("development") != null) {
 			development = true;
 			Logger.info("Notice: You are running in development mode, some features are disabled.");
-			messageFormat = messageFormat.replace("&", "ยง");
-			loginFormat = loginFormat.replace("&", "ยง");
-			authenticateFormat = authenticateFormat.replace("&", "ยง");
-			leaveFormat = leaveFormat.replace("&", "ยง");
+			messageFormat = messageFormat.replace("&", "ง");
+			loginFormat = loginFormat.replace("&", "ง");
+			authenticateFormat = authenticateFormat.replace("&", "ง");
+			leaveFormat = leaveFormat.replace("&", "ง");
 			return;
 		}
 		Properties p = new Properties();
@@ -55,22 +55,22 @@ public class ConfigurationManager {
 					problem = true;
 				}
 				if (p.containsKey("messageFormat")) {
-					messageFormat = String.valueOf(p.getProperty("messageFormat")).replace("&", "ยง");
+					messageFormat = String.valueOf(p.getProperty("messageFormat")).replace("&", "ง");
 				} else {
 					problem = true;
 				}
 				if (p.containsKey("loginFormat")) {
-					loginFormat = String.valueOf(p.getProperty("loginFormat")).replace("&", "ยง");
+					loginFormat = String.valueOf(p.getProperty("loginFormat")).replace("&", "ง");
 				} else {
 					problem = true;
 				}
 				if (p.containsKey("authenticateFormat")) {
-					authenticateFormat = String.valueOf(p.getProperty("authenticateFormat")).replace("&", "ยง");
+					authenticateFormat = String.valueOf(p.getProperty("authenticateFormat")).replace("&", "ง");
 				} else {
 					problem = true;
 				}
 				if (p.containsKey("leaveFormat")) {
-					leaveFormat = String.valueOf(p.getProperty("leaveFormat")).replace("&", "ยง");
+					leaveFormat = String.valueOf(p.getProperty("leaveFormat")).replace("&", "ง");
 				} else {
 					problem = true;
 				}

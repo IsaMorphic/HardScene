@@ -125,9 +125,9 @@ public class WebSocket implements Runnable {
 				if (rawMessage.equals("null") || rawMessage.equals("-1"))
 					break;
 				if (HardScene.config.colorCodes) {
-					rawMessage = rawMessage.replace("&", "§");
+					rawMessage = rawMessage.replace("&", "�");
 				} else {
-					rawMessage.replace("§", "");
+					rawMessage.replace("�", "");
 				}
 				if (rawMessage.startsWith("/") && HardScene.config.doRequireInfo) {
 					HardScene_AuthThread.handleCommand(getClientAlternative(), rawMessage);
@@ -146,7 +146,7 @@ public class WebSocket implements Runnable {
 						spamStrike = 0;
 					}
 					Logger.info(HardScene.formatAddress(socket) + " (" + wsc.id + "): " + wsc.name + ": " + rawMessage);
-					rawMessage = rawMessage.replace("Â", "");
+					rawMessage = rawMessage.replace("", "");
 					HardScene.broadcast(rawMessage);
 				}
 			}

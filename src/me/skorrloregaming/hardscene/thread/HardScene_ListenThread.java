@@ -55,9 +55,9 @@ public class HardScene_ListenThread implements Runnable {
 				String rawMessage = new String(messageBytes, StandardCharsets.UTF_8).trim();
 				String message = rawMessage;
 				if (HardScene.config.colorCodes) {
-					message = message.replace("&", "§");
+					message = message.replace("&", "�");
 				} else {
-					message.replace("§", "");
+					message.replace("�", "");
 				}
 				if (message.startsWith("/") && HardScene.config.doRequireInfo) {
 					HardScene_AuthThread.handleCommand(client, message);
@@ -77,7 +77,7 @@ public class HardScene_ListenThread implements Runnable {
 					}
 					if (returnValue != 0 && rawMessage.length() != 0) {
 						Logger.info(client.address.toString() + " (" + client.id + "): " + client.name + ": " + message);
-						message = message.replace("Â", "");
+						message = message.replace("", "");
 						HardScene.broadcast(message);
 					}
 				}

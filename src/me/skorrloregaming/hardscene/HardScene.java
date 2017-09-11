@@ -177,7 +177,7 @@ public class HardScene {
 		String modifiedMessage = new String(messageChars);
 		if (detectedSwearing) {
 			try {
-				broadcast("Â§o" + message, true);
+				broadcast("§o" + message, true);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
