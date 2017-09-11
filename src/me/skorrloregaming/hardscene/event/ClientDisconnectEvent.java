@@ -22,7 +22,7 @@ public class ClientDisconnectEvent {
 			if (HardScene.instance.clients.containsKey(client.id)) {
 				HardScene.instance.clients.remove(client.id);
 			}
-			String message = client.name + " has quit the server.";
+			String message = HardScene.config.leaveFormat.replace("{client}", client.name);
 			Logger.info(message);
 			HardScene.broadcast(message);
 		}

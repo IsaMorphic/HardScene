@@ -125,13 +125,14 @@ public class WebSocket implements Runnable {
 				if (rawMessage.equals("null") || rawMessage.equals("-1"))
 					break;
 				if (HardScene.config.colorCodes) {
-					rawMessage = rawMessage.replace("&", "ง");
+					rawMessage = rawMessage.replace("&", "ยง");
 				} else {
-					rawMessage.replace("ง", "");
+					rawMessage.replace("ยง", "");
 				}
 				if (rawMessage.startsWith("/") && HardScene.config.doRequireInfo) {
 					HardScene_AuthThread.handleCommand(getClientAlternative(), rawMessage);
 				} else {
+					rawMessage = HardScene.config.messageFormat.replace("{client}", wsc.name).replace("{message}", rawMessage);
 					if (HardScene.config.enableSwearFilter)
 						rawMessage = HardScene.instance.processAntiSwear(getClientAlternative(), rawMessage);
 					if (lastMessageSecond == (int) (System.currentTimeMillis() / 1000)) {
@@ -145,8 +146,7 @@ public class WebSocket implements Runnable {
 						spamStrike = 0;
 					}
 					Logger.info(HardScene.formatAddress(socket) + " (" + wsc.id + "): " + wsc.name + ": " + rawMessage);
-					rawMessage = HardScene.config.messageFormat.replace("{client}", wsc.name).replace("{message}", rawMessage);
-					rawMessage = rawMessage.replace("ย", "");
+					rawMessage = rawMessage.replace("ร", "");
 					HardScene.broadcast(rawMessage);
 				}
 			}

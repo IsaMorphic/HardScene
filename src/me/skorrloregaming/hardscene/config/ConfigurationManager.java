@@ -13,7 +13,10 @@ public class ConfigurationManager {
 	public int port = 28894;
 	public boolean log = true;
 	public boolean allowSameNameClients = false;
-	public String messageFormat = "&1{client}&r&l:&r {message}";
+	public String messageFormat = "&1{client}&r: {message}";
+	public String loginFormat = "&1{client}&r has joined the server.";
+	public String authenticateFormat = "&1{client}&r has authenticated with the server.";
+	public String leaveFormat = "&1{client}&r has quit the server.";
 	public boolean colorCodes = true;
 	public boolean doRequireInfo = true;
 	public boolean translationFeatures = true;
@@ -25,6 +28,10 @@ public class ConfigurationManager {
 		if (System.getenv("development") != null) {
 			development = true;
 			Logger.info("Notice: You are running in development mode, some features are disabled.");
+			messageFormat = messageFormat.replace("&", "§");
+			loginFormat = loginFormat.replace("&", "§");
+			authenticateFormat = authenticateFormat.replace("&", "§");
+			leaveFormat = leaveFormat.replace("&", "§");
 			return;
 		}
 		Properties p = new Properties();
@@ -32,44 +39,59 @@ public class ConfigurationManager {
 			try (FileReader reader = new FileReader(file)) {
 				p.load(reader);
 				boolean problem = false;
-				try {
+				if (p.containsKey("port")) {
 					port = Integer.parseInt(p.getProperty("port"));
-				} catch (Exception ex) {
+				} else {
 					problem = true;
 				}
-				try {
+				if (p.containsKey("log")) {
 					log = Boolean.parseBoolean(p.getProperty("log"));
-				} catch (Exception ex) {
+				} else {
 					problem = true;
 				}
-				try {
+				if (p.containsKey("allowSameNameClients")) {
 					allowSameNameClients = Boolean.parseBoolean(p.getProperty("allowSameNameClients"));
-				} catch (Exception ex) {
+				} else {
 					problem = true;
 				}
-				try {
-					messageFormat = String.valueOf(p.getProperty("messageFormat")).replace("&", "�");
-				} catch (Exception ex) {
+				if (p.containsKey("messageFormat")) {
+					messageFormat = String.valueOf(p.getProperty("messageFormat")).replace("&", "§");
+				} else {
 					problem = true;
 				}
-				try {
+				if (p.containsKey("loginFormat")) {
+					loginFormat = String.valueOf(p.getProperty("loginFormat")).replace("&", "§");
+				} else {
+					problem = true;
+				}
+				if (p.containsKey("authenticateFormat")) {
+					authenticateFormat = String.valueOf(p.getProperty("authenticateFormat")).replace("&", "§");
+				} else {
+					problem = true;
+				}
+				if (p.containsKey("leaveFormat")) {
+					leaveFormat = String.valueOf(p.getProperty("leaveFormat")).replace("&", "§");
+				} else {
+					problem = true;
+				}
+				if (p.containsKey("colorCodes")) {
 					colorCodes = Boolean.parseBoolean(p.getProperty("colorCodes"));
-				} catch (Exception ex) {
+				} else {
 					problem = true;
 				}
-				try {
+				if (p.containsKey("doRequireInfo")) {
 					doRequireInfo = Boolean.parseBoolean(p.getProperty("doRequireInfo"));
-				} catch (Exception ex) {
+				} else {
 					problem = true;
 				}
-				try {
+				if (p.containsKey("translationFeatures")) {
 					translationFeatures = Boolean.parseBoolean(p.getProperty("translationFeatures"));
-				} catch (Exception ex) {
+				} else {
 					problem = true;
 				}
-				try {
+				if (p.containsKey("enableSwearFilter")) {
 					enableSwearFilter = Boolean.parseBoolean(p.getProperty("enableSwearFilter"));
-				} catch (Exception ex) {
+				} else {
 					problem = true;
 				}
 				if (problem) {
@@ -91,6 +113,9 @@ public class ConfigurationManager {
 			writer.println("doRequireInfo=" + doRequireInfo);
 			writer.println("allowSameNameClients=" + allowSameNameClients);
 			writer.println("messageFormat=" + messageFormat);
+			writer.println("loginFormat=" + loginFormat);
+			writer.println("authenticateFormat=" + authenticateFormat);
+			writer.println("leaveFormat=" + leaveFormat);
 			writer.println("colorCodes=" + colorCodes);
 			writer.println("translationFeatures=" + translationFeatures);
 			writer.println("enableSwearFilter=" + enableSwearFilter);

@@ -42,7 +42,6 @@ public class HardScene {
 
 	public static File configFile = null;
 
-	private SwearData swearData;
 	private ArrayList<String> swearWords = new ArrayList<String>();
 
 	public static Date getLastCompilationTime() {
@@ -83,7 +82,6 @@ public class HardScene {
 	}
 
 	public void onEnable() {
-		swearData = new SwearData();
 		swearWords.add("fuck");
 		swearWords.add("nigga");
 		swearWords.add("nigger");
@@ -118,8 +116,6 @@ public class HardScene {
 		swearWords.add("milf");
 		swearWords.add("anus");
 		swearWords.add("dafuq");
-		for (String string : swearWords)
-			swearData.fill(string);
 		operatorManager = new LocalizationManager(new File("hardscene_operators.properties"));
 		authManager = new PropertyManager(new File("hardscene_auth.properties"));
 		bannedManager = new LocalizationManager(new File("hardscene_banned.properties"));
@@ -166,50 +162,26 @@ public class HardScene {
 	}
 
 	public String processAntiSwear(Client client, String message) {
-		String modifiedMessage = message;
-		char[] messageChars = modifiedMessage.toCharArray();
-		Swear commonSwear = new Swear(0, false, "", 0);
+		char[] messageChars = message.toCharArray();
 		boolean detectedSwearing = false;
-		for (int i = 0; i < modifiedMessage.length() + 1; i++) {
-			if (commonSwear.getArg1()) {
-				String currentSwear = commonSwear.getArg2();
-				int startIndex = commonSwear.getArg0();
-				if (swearWords.contains(currentSwear.toLowerCase().replace(" ", ""))) {
-					int endIndex = commonSwear.getArg3();
-					for (int index = startIndex; index < endIndex + 1; index++) {
-						messageChars[index] = '*';
-					}
-					modifiedMessage = new String(messageChars);
-					commonSwear = new Swear(0, false, "", 0);
-					detectedSwearing = true;
-					i = 0;
-					continue;
-				} else if (messageChars.length > i) {
-					if (swearData.get(currentSwear.length()).contains(Character.toLowerCase(messageChars[i]))) {
-						currentSwear += messageChars[i];
-						boolean taskSuccess = false;
-						for (String string : swearWords) {
-							if (string.contains(currentSwear.toLowerCase())) {
-								taskSuccess = true;
-								break;
-							}
-						}
-						if (taskSuccess) {
-							commonSwear = new Swear(startIndex, true, currentSwear, i);
-							continue;
-						}
-					}
-					if (!(messageChars[i] == ' ')) {
-						commonSwear = new Swear(0, false, "", 0);
-					}
+		for (String swear : swearWords) {
+			int beginIndex = message.indexOf(swear);
+			if (beginIndex > -1) {
+				int endIndex = beginIndex + swear.length();
+				for (int i = beginIndex; i < endIndex; i++) {
+					messageChars[i] = '*';
 				}
-			}
-			if (messageChars.length > i && swearData.get(0).contains(Character.toLowerCase(messageChars[i]))) {
-				commonSwear = new Swear(i, true, messageChars[i] + "", i);
-				continue;
+				detectedSwearing = true;
 			}
 		}
+		String modifiedMessage = new String(messageChars);
 		if (detectedSwearing) {
+			try {
+				broadcast("§o" + message, true);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			Logger.info(message);
 			client.sendMessage("Please do not swear, otherwise action will be taken.");
 		}
 		return modifiedMessage;
@@ -249,14 +221,24 @@ public class HardScene {
 		}
 	}
 
-	public static void broadcast(String message) throws IOException {
+	public static void broadcast(String message, boolean staffOnly) throws IOException {
 		log(message);
 		for (Client c : instance.clients.values()) {
 			String format = message;
 			if (c.unsupportedClient)
 				format = format + '\r' + '\n';
-			c.sendMessage(format);
+			if (staffOnly) {
+				if (operatorManager.propertyExists(c.name)) {
+					c.sendMessage(format);
+				}
+			} else {
+				c.sendMessage(format);
+			}
 		}
+	}
+
+	public static void broadcast(String message) throws IOException {
+		broadcast(message, false);
 	}
 
 }

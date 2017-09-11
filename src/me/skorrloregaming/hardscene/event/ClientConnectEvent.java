@@ -19,7 +19,7 @@ public class ClientConnectEvent {
 			}
 		}
 		Logger.info(client.address + " has joined the server.");
-		String message = client.name + " has joined the server.";
+		String message = HardScene.config.loginFormat.replace("{client}", client.name);
 		Logger.info(message);
 		HardScene.broadcast(message);
 	}
