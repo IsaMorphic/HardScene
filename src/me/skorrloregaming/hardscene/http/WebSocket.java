@@ -124,8 +124,6 @@ public class WebSocket implements Runnable {
 					break;
 				if (rawMessage.equals("null") || rawMessage.equals("-1"))
 					break;
-				if (HardScene.config.enableSwearFilter)
-					rawMessage = HardScene.instance.processAntiSwear(getClientAlternative(), rawMessage);
 				if (HardScene.config.colorCodes) {
 					rawMessage = rawMessage.replace("&", "§");
 				} else {
@@ -134,6 +132,8 @@ public class WebSocket implements Runnable {
 				if (rawMessage.startsWith("/") && HardScene.config.doRequireInfo) {
 					HardScene_AuthThread.handleCommand(getClientAlternative(), rawMessage);
 				} else {
+					if (HardScene.config.enableSwearFilter)
+						rawMessage = HardScene.instance.processAntiSwear(getClientAlternative(), rawMessage);
 					if (lastMessageSecond == (int) (System.currentTimeMillis() / 1000)) {
 						spamStrike++;
 						if (spamStrike >= 3) {
